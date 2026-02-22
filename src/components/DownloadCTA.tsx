@@ -1,21 +1,26 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
+import { useLanguage } from '@/context/LanguageContext';
 
 const DownloadCTA = () => {
+    const { t } = useLanguage();
+
     return (
-        <section className="w-full px-4 py-24 relative z-20">
+        <section className="w-full px-4 py-16 sm:py-20 md:py-24 relative z-20">
             <div className="max-w-4xl mx-auto text-center">
 
                 {/* Title */}
-                <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-                    Попробуйте Phantom прямо сейчас
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 sm:mb-6">
+                    {t.downloadCTA.title}
                 </h2>
 
                 {/* Subtitle */}
-                <p className="text-gray-400 text-lg mb-12 max-w-xl mx-auto">
-                    Защищённый мессенджер нового поколения уже здесь.
+                <p className="text-gray-400 text-sm sm:text-base md:text-lg mb-10 sm:mb-12 max-w-xl mx-auto">
+                    {t.downloadCTA.subtitle1}
                     <br />
-                    Простой, быстрый, приватный.
+                    {t.downloadCTA.subtitle2}
                 </p>
 
                 {/* Buttons */}
@@ -27,12 +32,12 @@ const DownloadCTA = () => {
                         <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
                             <path d="M0 3.449L9.75 2.1v9.451H0V3.449zm10.949-1.655L24 0v11.551H10.949V1.794zM0 12.6h9.75v9.451L0 20.85V12.6zm10.949 0H24v11.794l-13.051-1.794V12.6z" />
                         </svg>
-                        Скачать
+                        {t.downloadCTA.btnDownload}
                     </Link>
 
                     {/* Secondary Button */}
                     <Link href="/install" className="px-8 py-3 bg-white/5 border border-white/10 rounded-full text-gray-300 font-medium hover:bg-white/10 transition-colors">
-                        Другие платформы
+                        {t.downloadCTA.btnOtherPlatforms}
                     </Link>
 
                 </div>
