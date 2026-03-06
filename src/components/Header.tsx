@@ -56,7 +56,7 @@ const NavigationItems = ({ pathname }: { pathname: string }) => {
 
   return (
     // Равномерные отступы между пунктами меню
-    <nav className="flex items-center gap-8 text-[17px] font-medium tracking-wide">
+    <nav className="flex items-center gap-12 text-[17px] font-medium tracking-wide">
       {items.map((item) => (
         <Link
           href={item.href}
@@ -102,11 +102,10 @@ const Header = () => {
              ВАЖНО: px-8 (32px) устанавливает идентичный отступ слева и справа.
              justify-between расталкивает Логотип и Кнопки к этим границам.
           */}
-          <header className="relative flex items-center justify-between px-8 h-[68px] w-full z-10">
+          <header className="relative flex items-center px-6 h-[68px] w-full z-10">
 
-            {/* --- LEFT SIDE (Logo) --- */}
-            {/* Starts exactly at px-8 from left edge */}
-            <div className="flex-shrink-0 z-20 flex justify-start">
+            {/* --- LEFT SIDE: LOGO + NAVIGATION GROUP --- */}
+            <div className="flex items-center gap-12 z-20">
               <Link href="/" className="flex items-center gap-3 cursor-pointer group relative">
                 <div className="relative w-9 h-9 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                   <div className="absolute right-[-10px] top-1/2 -translate-y-1/2 w-0 h-0 flex items-center justify-end">
@@ -146,17 +145,13 @@ const Header = () => {
 
                 <span className="text-2xl font-bold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-white to-purple-400 group-hover:to-purple-300 transition-all duration-300 group-hover:drop-shadow-[0_0_10px_rgba(139,92,246,0.5)]">Phantom</span>
               </Link>
+              <div className="hidden lg:block">
+                <NavigationItems pathname={pathname} />
+              </div>
             </div>
 
-            {/* --- CENTER (Navigation) --- */}
-            {/* Using flex-1 to allow equal spacing distribution via justify-between on parent */}
-            <div className="hidden lg:flex items-center justify-center">
-              <NavigationItems pathname={pathname} />
-            </div>
-
-            {/* --- RIGHT SIDE (Buttons) --- */}
-            {/* Ends exactly at px-8 from right edge */}
-            <div className="flex items-center justify-end gap-4 z-20 flex-shrink-0">
+            {/* --- RIGHT SIDE: ACTIONS --- */}
+            <div className="flex-1 flex items-center justify-end gap-4 z-20">
 
               <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="lg:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5 text-white bg-purple-500/15 border border-purple-500/40 rounded-xl backdrop-blur-sm">
                 <span className={`w-5 h-[2px] bg-current rounded-full transition-all duration-300 ${mobileMenuOpen ? 'rotate-45 translate-y-2' : ''}`}></span>
@@ -182,7 +177,6 @@ const Header = () => {
               </button>
 
               <Link href="/install" className="hidden sm:block">
-                {/* Removed any negative margins, using standard flex gap and padding */}
                 <div className="relative bg-[#8B5CF6] hover:bg-[#7c4dff] text-white text-[15px] font-semibold py-2 px-5 rounded-full shadow-[0_4px_14px_rgba(139,92,246,0.4)] hover:shadow-[0_6px_20px_rgba(139,92,246,0.6)] hover:-translate-y-0.5 transition-all duration-300">
                   {t.header.download}
                 </div>
