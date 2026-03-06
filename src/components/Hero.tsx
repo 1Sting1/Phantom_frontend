@@ -3,9 +3,17 @@
 import React from 'react';
 import Link from 'next/link';
 import { useLanguage } from '@/context/LanguageContext';
+import { OS, useOS } from '@/hooks/useOS';
 
 const Hero = () => {
   const { t } = useLanguage();
+  const os = useOS();
+
+  // Helper to format the download text
+  const getDownloadText = (os: OS) => {
+    if (os === 'Unknown') return t.hero.btnDownload;
+    return t.hero.btnDownloadOS.replace('{os}', os);
+  };
 
   return (
     <section className="flex flex-col lg:grid lg:grid-cols-[1.2fr_0.8fr] xl:grid-cols-[1.3fr_0.7fr] items-center justify-center py-12 px-4 sm:px-8 md:px-12 lg:px-16 xl:px-24 2xl:px-32 gap-10 lg:gap-12 relative min-h-[80vh] w-full mt-10 lg:mt-0 lg:pt-24">
@@ -166,7 +174,7 @@ const Hero = () => {
               <path d="M12 12v9" />
               <path d="m16 16-4 4-4-4" />
             </svg>
-            <span className="relative z-10 whitespace-nowrap">{t.hero.btnDownload}</span>
+            <span className="relative z-10 whitespace-nowrap">{getDownloadText(os)}</span>
           </Link>
           <Link href="/docs" className="w-full sm:w-auto flex justify-center items-center relative bg-[#1F1D2B] hover:bg-[#2a2838] text-white font-medium py-3 sm:py-3.5 px-6 sm:px-9 rounded-full transition-all duration-500 ease-out border border-white/5 hover:border-purple-500/40 hover:shadow-lg hover:shadow-purple-900/20 hover:-translate-y-1 active:scale-95 text-[15px] group overflow-hidden">
             <span className="absolute inset-0 bg-gradient-to-r from-purple-500/0 via-purple-500/10 to-purple-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out"></span>
@@ -177,17 +185,17 @@ const Hero = () => {
         {/* Stats / Trust Indicators */}
         <div className="flex flex-row justify-center lg:justify-start items-center gap-6 md:gap-8 mt-4 pt-6 sm:pt-8 border-t border-white/5 relative animate-fade-in-up w-full max-w-sm sm:max-w-md lg:max-w-none mx-auto lg:mx-0" style={{ animationDelay: '0.6s', opacity: 0, zIndex: 10 }}>
           <div className="flex flex-col group cursor-default relative items-center lg:items-start text-center lg:text-left">
-            <span className="text-xl md:text-2xl font-bold text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-purple-400 group-hover:to-blue-400 transition-all duration-300">100%</span>
+            <span className="text-xl md:text-2xl font-bold text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-purple-400 group-hover:to-blue-400 transition-all duration-300">{t.hero.stat1Value}</span>
             <span className="text-[10px] md:text-xs text-gray-500 uppercase tracking-wider group-hover:text-gray-400 transition-colors">{t.hero.stat1}</span>
             <div className="absolute -inset-2 bg-purple-500/10 rounded-lg opacity-0 group-hover:opacity-100 blur-sm transition-opacity" style={{ zIndex: -1 }}></div>
           </div>
           <div className="flex flex-col group cursor-default relative items-center lg:items-start text-center lg:text-left">
-            <span className="text-xl md:text-2xl font-bold text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-blue-400 group-hover:to-cyan-400 transition-all duration-300">P2P</span>
+            <span className="text-xl md:text-2xl font-bold text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-blue-400 group-hover:to-cyan-400 transition-all duration-300">{t.hero.stat2Value}</span>
             <span className="text-[10px] md:text-xs text-gray-500 uppercase tracking-wider group-hover:text-gray-400 transition-colors">{t.hero.stat2}</span>
             <div className="absolute -inset-2 bg-blue-500/10 rounded-lg opacity-0 group-hover:opacity-100 blur-sm transition-opacity" style={{ zIndex: -1 }}></div>
           </div>
           <div className="flex flex-col group cursor-default relative items-center lg:items-start text-center lg:text-left">
-            <span className="text-xl md:text-2xl font-bold text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-pink-400 group-hover:to-purple-400 transition-all duration-300">AES</span>
+            <span className="text-xl md:text-2xl font-bold text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-pink-400 group-hover:to-purple-400 transition-all duration-300">{t.hero.stat3Value}</span>
             <span className="text-[10px] md:text-xs text-gray-500 uppercase tracking-wider group-hover:text-gray-400 transition-colors">{t.hero.stat3}</span>
             <div className="absolute -inset-2 bg-pink-500/10 rounded-lg opacity-0 group-hover:opacity-100 blur-sm transition-opacity" style={{ zIndex: -1 }}></div>
           </div>

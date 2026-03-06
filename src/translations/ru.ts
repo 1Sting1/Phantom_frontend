@@ -5,6 +5,7 @@ export const ru = {
         docs: 'Документация',
         donate: 'Донат',
         download: 'Скачать',
+        downloadOS: 'Скачать для {os}',
     },
     hero: {
         title: 'Phantom',
@@ -12,10 +13,14 @@ export const ru = {
         subtitle2: 'мессенджер для вас',
         description: 'Phantom — гибридный защищённый мессенджер с постквантовым шифрованием (Kyber + Dilithium) и P2P-сетевой архитектурой. Сервер не может прочитать сообщения и не нужен для работы сети.',
         btnDownload: 'Скачать',
+        btnDownloadOS: 'Скачать для {os}',
         btnLearnMore: 'Узнать больше',
         stat1: 'Анонимно',
+        stat1Value: '100%',
         stat2: 'Архитектура',
+        stat2Value: 'P2P',
         stat3: 'Шифрование',
+        stat3Value: 'AES',
     },
     carousel: {
         slide1: 'Интерфейс, созданный для скорости, приватности и фокуса',
@@ -23,6 +28,12 @@ export const ru = {
         slide3: 'Расширенные настройки приватности',
         otherPlatforms: 'Другие платформы',
         loading: 'Загрузка...',
+        chatItems: [
+            { name: 'Алекс', msg: 'Увидимся завтра', time: '2м' },
+            { name: 'Джейми', msg: 'Как дела?', time: '5м' },
+            { name: 'Морган', msg: 'Понял, спасибо!', time: '1ч' },
+            { name: 'Сэм', msg: 'Давай встретимся!', time: '3ч' }
+        ]
     },
     features: {
         title: 'Ключевые возможности',
@@ -60,6 +71,7 @@ export const ru = {
         subtitle1: 'Защищённый мессенджер нового поколения уже здесь.',
         subtitle2: 'Простой, быстрый, приватный.',
         btnDownload: 'Скачать',
+        btnDownloadOS: 'Скачать для {os}',
         btnOtherPlatforms: 'Другие платформы',
     },
     footer: {
@@ -82,6 +94,56 @@ export const ru = {
             security: 'безопасность',
         },
     },
+    auth: {
+        email: 'E-mail',
+        password: 'Пароль',
+        passwordRepeat: 'Повторите пароль',
+        loginBtn: 'Войти',
+        registerBtn: 'Создать аккаунт',
+        noAccount: 'Нет аккаунта?',
+        alreadyHaveAccount: 'Уже есть аккаунт?',
+        createAccountLink: 'Создать аккаунт',
+        loginLink: 'Войти',
+    },
+    profile: {
+        title: 'Профиль',
+        edit: 'Редактировать',
+        activity: 'Активность',
+        days: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
+        months: ['Янв', 'Фев', 'Март', 'Апр', 'Май', 'Июнь', 'Июль', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек']
+    },
+    install_page: {
+        title: 'Установка Phantom',
+        subtitle: 'Выберите вашу платформу для скачивания',
+    },
+    forum_page: {
+        title: 'Форум Phantom',
+        subtitle: 'Присоединяйтесь к сообществу разработчиков и пользователей',
+        categories: 'Категории',
+        all_categories: 'Все категории',
+        threads: 'Треды',
+        new_thread: '+ Создать тред',
+        loading_threads: 'Загрузка тредов...',
+        no_threads: 'Тредов пока нет. Будьте первым!',
+        pinned: 'Закреплено',
+        locked: 'Закрыто',
+        author: 'Автор',
+        views: 'Просмотров',
+    },
+    docs_page: {
+        title: 'Документация',
+        subtitle: 'Полная документация по использованию и разработке для Phantom',
+        in_progress: 'Документация находится в разработке. Скоро здесь появится полная информация.',
+    },
+    donate_page: {
+        title: 'Поддержать проект',
+        subtitle: 'Phantom — это open-source проект. Ваша поддержка помогает развивать приватность и безопасность.',
+        info: 'Информация о способах поддержки проекта появится здесь в ближайшее время.',
+    },
+    common: {
+        loading: 'Загрузка...',
+        menu: 'Меню',
+    }
 };
 
 export type Translations = typeof ru;

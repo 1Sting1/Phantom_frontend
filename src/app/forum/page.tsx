@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Link from 'next/link';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface Category {
   id: string;
@@ -28,6 +29,7 @@ interface Thread {
 }
 
 export default function ForumPage() {
+  const { t, language } = useLanguage();
   const [categories, setCategories] = useState<Category[]>([]);
   const [threads, setThreads] = useState<Thread[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -78,7 +80,8 @@ export default function ForumPage() {
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('ru-RU', { 
+    const locale = language === 'ru' ? 'ru-RU' : 'en-US';
+    return date.toLocaleDateString(locale, { 
       year: 'numeric', 
       month: 'long', 
       day: 'numeric',
@@ -93,19 +96,19 @@ export default function ForumPage() {
       <div className="flex-1 px-12 lg:px-24 xl:px-32 2xl:px-40 py-20">
         <div className="max-w-7xl mx-auto">
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
-            Форум Phantom
+            {t.forum_page.title}
           </h1>
           <p className="text-gray-400 text-lg mb-12">
-            Присоединяйтесь к сообществу разработчиков и пользователей
+            {t.forum_page.subtitle}
           </p>
 
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
             {/* Categories Sidebar */}
             <div className="lg:col-span-1">
               <div className="bg-[#13111A] border border-white/10 rounded-2xl p-6 sticky top-20">
-                <h2 className="text-xl font-bold text-white mb-4">Категории</h2>
+                <h2 className="text-xl font-bold text-white mb-4">{t.forum_page.categories}</h2>
                 {loading ? (
-                  <p className="text-gray-400 text-sm">Загрузка...</p>
+                  <p className="text-gray-400 text-sm">{t.common?.loading || 'Loading...'}</p>
                 ) : (
                   <div className="space-y-2">
                     <button
@@ -116,7 +119,7 @@ export default function ForumPage() {
                           : 'text-gray-300 hover:bg-white/5'
                       }`}
                     >
-                      Все категории
+                      {t.forum_page.all_categories}
                     </button>
                     {categories.map((category) => (
                       <button
@@ -140,22 +143,22 @@ export default function ForumPage() {
             <div className="lg:col-span-3">
               <div className="bg-[#13111A] border border-white/10 rounded-2xl p-6">
                 <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-2xl font-bold text-white">Треды</h2>
+                  <h2 className="text-2xl font-bold text-white">{t.forum_page.threads}</h2>
                   <Link
                     href="/forum/new"
                     className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors text-sm font-medium"
                   >
-                    + Создать тред
+                    {t.forum_page.new_thread}
                   </Link>
                 </div>
 
                 {threadsLoading ? (
                   <div className="text-center py-12">
-                    <p className="text-gray-400">Загрузка тредов...</p>
+                    <p className="text-gray-400">{t.forum_page.loading_threads}</p>
                   </div>
                 ) : threads.length === 0 ? (
                   <div className="text-center py-12">
-                    <p className="text-gray-400">Тредов пока нет. Будьте первым!</p>
+                    <p className="text-gray-400">{t.forum_page.no_threads}</p>
                   </div>
                 ) : (
                   <div className="space-y-4">
@@ -170,12 +173,12 @@ export default function ForumPage() {
                             <div className="flex items-center gap-3 mb-2">
                               {thread.is_pinned && (
                                 <span className="px-2 py-1 bg-yellow-500/20 text-yellow-400 text-xs rounded border border-yellow-500/30">
-                                  Закреплено
+                                  {t.forum_page.pinned}
                                 </span>
                               )}
                               {thread.is_locked && (
                                 <span className="px-2 py-1 bg-red-500/20 text-red-400 text-xs rounded border border-red-500/30">
-                                  Закрыто
+                                  {t.forum_page.locked}
                                 </span>
                               )}
                               <h3 className="text-lg font-semibold text-white">
@@ -186,10 +189,10 @@ export default function ForumPage() {
                               {thread.content.substring(0, 150)}...
                             </p>
                             <div className="flex items-center gap-4 text-xs text-gray-500">
-                              <span>Автор: {thread.user_id.substring(0, 8)}...</span>
-                              <span>Просмотров: {thread.views_count}</span>
-                              <span>{formatDate(thread.created_at)}</span>
-                            </div>
+                               <span>{t.forum_page.author}: {thread.user_id.substring(0, 8)}...</span>
+                               <span>{t.forum_page.views}: {thread.views_count}</span>
+                               <span>{formatDate(thread.created_at)}</span>
+                             </div>
                           </div>
                         </div>
                       </Link>

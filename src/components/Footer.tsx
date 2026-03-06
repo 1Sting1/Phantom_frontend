@@ -13,7 +13,7 @@ interface FooterLink {
 }
 
 const Footer = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [footerLinks, setFooterLinks] = useState<FooterLink[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -139,7 +139,7 @@ const Footer = () => {
 
           {/* Language Selector Selector */}
           <button className="flex items-center gap-2 text-gray-300 text-xs hover:text-white transition-colors">
-            Ru
+            {language === 'ru' ? 'Русский' : 'English'}
             <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
           </button>
         </div>

@@ -36,10 +36,9 @@ interface Feature {
 }
 
 const Features = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [featuresData, setFeaturesData] = useState<Feature[]>([]);
   const [loading, setLoading] = useState(true);
-  const [language, setLanguage] = useState('ru');
 
 
   // Fallback features using translations

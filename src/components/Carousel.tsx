@@ -283,58 +283,59 @@ const Carousel = () => {
 
 // Reusable Chat List Component
 const ChatListItems = ({ compact = false }: { compact?: boolean }) => {
-  const items = [
-    { name: 'Alex', msg: 'See you tommorow', time: '2m', color: 'pink' }, // 'tommorow' to match typo in design if sticking to strict 1:1, or fix it? Design has 'tommorow' in screenshot.
-    { name: 'Jamie', msg: "What's up?", time: '5m', color: 'blue' },
-    { name: 'Morgan', msg: 'Got it, thanks!', time: '1h', color: 'yellow' }, // In screenshot looks dark/grayish
-    { name: 'Sam', msg: "Let's meet up!", time: '3h', color: 'green' }
-  ];
+  const { t } = useLanguage();
+  const items = t.carousel.chatItems;
+  const colors = ['pink', 'blue', 'yellow', 'green'];
 
   return (
     <>
-      {items.map((item, idx) => (
-        <div key={idx} className={`
-                group
-                flex items-center gap-3 sm:gap-4 
-                ${compact ? 'p-2 sm:p-3 rounded-2xl' : 'p-3 sm:p-4 rounded-xl'}
-                bg-white/5 border border-white/5 backdrop-blur-md
-                hover:bg-white/10 transition-all duration-300 ease-out cursor-pointer
-                hover:-translate-y-1 hover:shadow-xl w-full
-                ${item.color === 'pink' ? 'hover:shadow-pink-500/10 hover:border-pink-500/20' : ''}
-                ${item.color === 'blue' ? 'hover:shadow-blue-500/10 hover:border-blue-500/20' : ''}
-                ${item.color === 'yellow' ? 'hover:shadow-yellow-500/10 hover:border-yellow-500/20' : ''}
-                ${item.color === 'green' ? 'hover:shadow-green-500/10 hover:border-green-500/20' : ''}
-            `}>
-          {/* Avatar with Ghost Icon */}
-          <div className={`
-                    ${compact ? 'w-10 h-10' : 'w-12 h-12'} 
-                    rounded-full flex items-center justify-center shrink-0 overflow-hidden relative
-                    ${item.color === 'pink' ? 'bg-[#3A1425] shadow-[0_0_10px_rgba(236,72,153,0.3)]' : ''}
-                    ${item.color === 'blue' ? 'bg-[#10243E] shadow-[0_0_10px_rgba(59,130,246,0.3)]' : ''}
-                    ${item.color === 'yellow' ? 'bg-[#3E3810] shadow-[0_0_10px_rgba(234,179,8,0.3)]' : ''}
-                    ${item.color === 'green' ? 'bg-[#0F2922] shadow-[0_0_10px_rgba(34,197,94,0.3)]' : ''}
-                `}>
-            <div className={`${compact ? 'w-8 h-8' : 'w-9 h-9'} relative`}>
-              <Image
-                src={
-                  item.color === 'pink' ? '/ghost-v2-pink.png' :
-                    item.color === 'blue' ? '/ghost-v2-blue.png' :
-                      item.color === 'yellow' ? '/ghost-v2-yellow.png' :
-                        '/ghost-v2-green.png'
-                }
-                alt="Ghost Avatar"
-                fill
-                className="object-contain"
-              />
+      {items.map((item, idx) => {
+        const color = colors[idx % colors.length];
+        return (
+          <div key={idx} className={`
+                  group
+                  flex items-center gap-3 sm:gap-4 
+                  ${compact ? 'p-2 sm:p-3 rounded-2xl' : 'p-3 sm:p-4 rounded-xl'}
+                  bg-white/5 border border-white/5 backdrop-blur-md
+                  hover:bg-white/10 transition-all duration-300 ease-out cursor-pointer
+                  hover:-translate-y-1 hover:shadow-xl w-full
+                  ${color === 'pink' ? 'hover:shadow-pink-500/10 hover:border-pink-500/20' : ''}
+                  ${color === 'blue' ? 'hover:shadow-blue-500/10 hover:border-blue-500/20' : ''}
+                  ${color === 'yellow' ? 'hover:shadow-yellow-500/10 hover:border-yellow-500/20' : ''}
+                  ${color === 'green' ? 'hover:shadow-green-500/10 hover:border-green-500/20' : ''}
+              `}>
+            {/* Avatar with Ghost Icon */}
+            <div className={`
+                      ${compact ? 'w-10 h-10' : 'w-12 h-12'} 
+                      rounded-full flex items-center justify-center shrink-0 overflow-hidden relative
+                      ${color === 'pink' ? 'bg-[#3A1425] shadow-[0_0_10px_rgba(236,72,153,0.3)]' : ''}
+                      ${color === 'blue' ? 'bg-[#10243E] shadow-[0_0_10px_rgba(59,130,246,0.3)]' : ''}
+                      ${color === 'yellow' ? 'bg-[#3E3810] shadow-[0_0_10px_rgba(234,179,8,0.3)]' : ''}
+                      ${color === 'green' ? 'bg-[#0F2922] shadow-[0_0_10px_rgba(34,197,94,0.3)]' : ''}
+                  `}>
+              <div className={`${compact ? 'w-8 h-8' : 'w-9 h-9'} relative`}>
+                <Image
+                  src={
+                    color === 'pink' ? '/ghost-v2-pink.png' :
+                      color === 'blue' ? '/ghost-v2-blue.png' :
+                        color === 'yellow' ? '/ghost-v2-yellow.png' :
+                          '/ghost-v2-green.png'
+                  }
+                  alt="Ghost Avatar"
+                  fill
+                  className="object-contain"
+                />
+              </div>
             </div>
-          </div>
 
-          <div className="flex-1 min-w-0">
-            <div className="text-white font-medium text-sm md:text-base leading-none mb-1">{item.name}</div>
-            <div className="text-gray-400 text-xs md:text-sm truncate">{item.msg}</div>
+            <div className="flex-1 min-w-0">
+              <div className="text-white font-medium text-sm md:text-base leading-none mb-1">{item.name}</div>
+              <div className="text-gray-400 text-xs md:text-sm truncate">{item.msg}</div>
+            </div>
+            <div className="text-gray-500 text-[10px] sm:text-xs">{item.time}</div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </>
   );
 }

@@ -7,6 +7,7 @@ export const en: Translations = {
         docs: 'Documentation',
         donate: 'Donate',
         download: 'Download',
+        downloadOS: 'Download for {os}',
     },
     hero: {
         title: 'Phantom',
@@ -14,10 +15,14 @@ export const en: Translations = {
         subtitle2: 'messenger for you',
         description: 'Phantom is a hybrid secure messenger with post-quantum encryption (Kyber + Dilithium) and P2P network architecture. The server cannot read messages and is not needed for the network to function.',
         btnDownload: 'Download',
+        btnDownloadOS: 'Download for {os}',
         btnLearnMore: 'Learn More',
         stat1: 'Anonymous',
+        stat1Value: '100%',
         stat2: 'Architecture',
+        stat2Value: 'P2P',
         stat3: 'Encryption',
+        stat3Value: 'AES',
     },
     carousel: {
         slide1: 'Interface built for speed, privacy and focus',
@@ -25,6 +30,12 @@ export const en: Translations = {
         slide3: 'Advanced privacy settings',
         otherPlatforms: 'Other Platforms',
         loading: 'Loading...',
+        chatItems: [
+            { name: 'Alex', msg: 'See you tomorrow', time: '2m' },
+            { name: 'Jamie', msg: "What's up?", time: '5m' },
+            { name: 'Morgan', msg: 'Got it, thanks!', time: '1h' },
+            { name: 'Sam', msg: "Let's meet up!", time: '3h' }
+        ]
     },
     features: {
         title: 'Key Features',
@@ -62,6 +73,7 @@ export const en: Translations = {
         subtitle1: 'The secure messenger of the new generation is here.',
         subtitle2: 'Simple, fast, private.',
         btnDownload: 'Download',
+        btnDownloadOS: 'Download for {os}',
         btnOtherPlatforms: 'Other Platforms',
     },
     footer: {
@@ -84,4 +96,54 @@ export const en: Translations = {
             security: 'security',
         },
     },
+    auth: {
+        email: 'E-mail',
+        password: 'Password',
+        passwordRepeat: 'Repeat Password',
+        loginBtn: 'Login',
+        registerBtn: 'Create account',
+        noAccount: 'No account?',
+        alreadyHaveAccount: 'Already have an account?',
+        createAccountLink: 'Create account',
+        loginLink: 'Login',
+    },
+    profile: {
+        title: 'Profile',
+        edit: 'Edit',
+        activity: 'Activity',
+        days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    },
+    install_page: {
+        title: 'Install Phantom',
+        subtitle: 'Choose your platform for downloading',
+    },
+    forum_page: {
+        title: 'Phantom Forum',
+        subtitle: 'Join the community of developers and users',
+        categories: 'Categories',
+        all_categories: 'All Categories',
+        threads: 'Threads',
+        new_thread: '+ Create thread',
+        loading_threads: 'Loading threads...',
+        no_threads: 'There are no threads yet. Be the first!',
+        pinned: 'Pinned',
+        locked: 'Locked',
+        author: 'Author',
+        views: 'Views',
+    },
+    docs_page: {
+        title: 'Documentation',
+        subtitle: 'Full documentation on usage and development for Phantom',
+        in_progress: 'Documentation is under development. Full information will appear here soon.',
+    },
+    donate_page: {
+        title: 'Support the Project',
+        subtitle: 'Phantom is an open-source project. Your support helps develop privacy and security.',
+        info: 'Information about ways to support the project will appear here shortly.',
+    },
+    common: {
+        loading: 'Loading...',
+        menu: 'Menu',
+    }
 };
