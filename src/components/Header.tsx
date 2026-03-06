@@ -55,8 +55,7 @@ const NavigationItems = ({ pathname }: { pathname: string }) => {
   }
 
   return (
-    // Равномерные отступы между пунктами меню
-    <nav className="flex items-center gap-12 text-[17px] font-medium tracking-wide">
+    <nav className="flex items-center gap-8 text-[17px] font-medium tracking-wide">
       {items.map((item) => (
         <Link
           href={item.href}
@@ -91,27 +90,25 @@ const Header = () => {
 
   return (
     <>
-      <div className="w-full sticky top-0 z-50 px-4 pt-6">
-        {/* Compact container width */}
-        <div className="max-w-[940px] mx-auto relative bg-[#0F0C16]/90 backdrop-blur-xl rounded-full border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
+      <div className="w-full sticky top-0 z-50 px-4 sm:px-8 pt-6">
+        <div className="w-[75%] max-w-[900px] mx-auto relative bg-[#0F0C16]/90 backdrop-blur-xl rounded-full border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
 
           {/* Top glow decoration */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-[1px] bg-gradient-to-r from-transparent via-purple-500/40 to-transparent"></div>
 
-          {/* 
-             ВАЖНО: px-8 (32px) устанавливает идентичный отступ слева и справа.
-             justify-between расталкивает Логотип и Кнопки к этим границам.
-          */}
-          <header className="relative flex items-center px-6 h-[68px] w-full z-10">
+          {/* АБСОЛЮТНОЕ ПОЗИЦИОНИРОВАНИЕ для логотипа, чтобы он был В САМОМ начале хэдера без отступов */}
+          <header className="relative flex items-center justify-between px-5 sm:px-6 h-[68px] w-full z-10">
 
-            {/* --- LEFT SIDE: LOGO + NAVIGATION GROUP --- */}
-            <div className="flex items-center gap-12 z-20">
-              <Link href="/" className="flex items-center gap-3 cursor-pointer group relative">
-                <div className="relative w-9 h-9 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                  <div className="absolute right-[-10px] top-1/2 -translate-y-1/2 w-0 h-0 flex items-center justify-end">
+            {/* --- 1. ЛОГОТИП СЛЕВА --- */}
+            <div className="flex items-center z-20">
+              <Link href="/" className="flex items-center gap-2.5 transition-transform hover:scale-[1.02]">
+                {/* Logo Icon Container */}
+                <div className="relative flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+                  {/* Ghost Animation Container */}
+                  <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
                     {ghostChasing && (
                       <>
-                        <div className="absolute right-0 -top-6 flex items-center animate-pacman-run-forward w-max">
+                        <div className="absolute left-0 -top-6 flex items-center animate-pacman-run-forward w-max">
                           <div className="w-10 h-10 flex items-center animate-pacman-glow">
                             <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-[0_0_8px_rgba(234,179,8,0.6)]">
                               <path d="M10 0C15.5228 0 20 4.47715 20 10C20 15.5228 15.5228 20 10 20C4.47715 20 0 15.5228 0 10C0 4.47715 4.47715 0 10 0Z" fill="#EAB308" />
@@ -121,7 +118,7 @@ const Header = () => {
                             </svg>
                           </div>
                         </div>
-                        <div className="absolute right-0 -top-6 flex items-center animate-ghost-follow-and-return w-max" style={{ animationDelay: '0.3s' }}>
+                        <div className="absolute left-0 -top-6 flex items-center animate-ghost-follow-and-return w-max" style={{ animationDelay: '0.3s' }}>
                           <div className="w-12 h-12 flex items-center">
                             <svg viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-[0_0_8px_rgba(168,85,247,0.6)]">
                               <path d="M19 4C12.9249 4 8 8.92487 8 15V28C8 29.6569 9.34315 31 11 31C11.83 31 12.5 30.33 12.5 29.5C12.5 28.67 13.17 28 14 28C14.83 28 15.5 28.67 15.5 29.5C15.5 30.33 16.17 31 17 31C17.83 31 18.5 30.33 18.5 29.5C18.5 28.67 19.17 28 20 28C20.83 28 21.5 28.67 21.5 29.5C21.5 30.33 22.17 31 23 31C23.83 31 24.5 30.33 24.5 29.5C24.5 28.67 25.17 28 26 28C26.83 28 27.5 28.67 27.5 29.5C27.5 30.33 28.17 31 29 31C30.6569 31 32 29.6569 32 28V15C32 8.92487 27.0751 4 19 4Z" stroke="#A855F7" strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round" className="animate-ghost-glow" />
@@ -133,26 +130,29 @@ const Header = () => {
                       </>
                     )}
                   </div>
-                </div>
 
-                <div onClick={handleGhostClick} className={`relative w-7 h-7 flex items-center cursor-pointer transition-all duration-300 ${ghostChasing ? 'opacity-0 scale-0' : 'opacity-100 scale-100 hover:scale-110'}`}>
-                  <svg viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-[0_0_8px_rgba(168,85,247,0.6)]">
-                    <path d="M19 4C12.9249 4 8 8.92487 8 15V28C8 29.6569 9.34315 31 11 31C11.83 31 12.5 30.33 12.5 29.5C12.5 28.67 13.17 28 14 28C14.83 28 15.5 28.67 15.5 29.5C15.5 30.33 16.17 31 17 31C17.83 31 18.5 30.33 18.5 29.5C18.5 28.67 19.17 28 20 28C20.83 28 21.5 28.67 21.5 29.5C21.5 30.33 22.17 31 23 31C23.83 31 24.5 30.33 24.5 29.5C24.5 28.67 25.17 28 26 28C26.83 28 27.5 28.67 27.5 29.5C27.5 30.33 28.17 31 29 31C30.6569 31 32 29.6569 32 28V15C32 8.92487 27.0751 4 19 4Z" stroke="#A855F7" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" className="animate-ghost-glow transition-all duration-300 hover:stroke-[#C084FC]" />
-                    <circle cx="14" cy="12" r="1.5" fill="#FFFFFF" className="opacity-90"><animate attributeName="opacity" values="0.9;0.3;0.9" dur="2s" repeatCount="indefinite" /></circle>
-                    <circle cx="24" cy="12" r="1.5" fill="#FFFFFF" className="opacity-90"><animate attributeName="opacity" values="0.9;0.3;0.9" dur="2s" repeatCount="indefinite" begin="0.1s" /></circle>
-                  </svg>
+                  {/* Static Icon */}
+                  <div onClick={handleGhostClick} className={`relative w-7 h-7 flex items-center cursor-pointer transition-all duration-300 ${ghostChasing ? 'opacity-0 scale-0' : 'opacity-100 scale-100'}`}>
+                    <svg viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-[0_0_8px_rgba(168,85,247,0.6)]">
+                      <path d="M19 4C12.9249 4 8 8.92487 8 15V28C8 29.6569 9.34315 31 11 31C11.83 31 12.5 30.33 12.5 29.5C12.5 28.67 13.17 28 14 28C14.83 28 15.5 28.67 15.5 29.5C15.5 30.33 16.17 31 17 31C17.83 31 18.5 30.33 18.5 29.5C18.5 28.67 19.17 28 20 28C20.83 28 21.5 28.67 21.5 29.5C21.5 30.33 22.17 31 23 31C23.83 31 24.5 30.33 24.5 29.5C24.5 28.67 25.17 28 26 28C26.83 28 27.5 28.67 27.5 29.5C27.5 30.33 28.17 31 29 31C30.6569 31 32 29.6569 32 28V15C32 8.92487 27.0751 4 19 4Z" stroke="#A855F7" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" className="animate-ghost-glow transition-all duration-300 group-hover:stroke-[#C084FC]" />
+                      <circle cx="14" cy="12" r="1.5" fill="#FFFFFF" className="opacity-90"><animate attributeName="opacity" values="0.9;0.3;0.9" dur="2s" repeatCount="indefinite" /></circle>
+                      <circle cx="24" cy="12" r="1.5" fill="#FFFFFF" className="opacity-90"><animate attributeName="opacity" values="0.9;0.3;0.9" dur="2s" repeatCount="indefinite" begin="0.1s" /></circle>
+                    </svg>
+                  </div>
                 </div>
 
                 <span className="text-2xl font-bold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-white to-purple-400 group-hover:to-purple-300 transition-all duration-300 group-hover:drop-shadow-[0_0_10px_rgba(139,92,246,0.5)]">Phantom</span>
               </Link>
-              <div className="hidden lg:block">
-                <NavigationItems pathname={pathname} />
-              </div>
             </div>
 
-            {/* --- RIGHT SIDE: ACTIONS --- */}
-            <div className="flex-1 flex items-center justify-end gap-4 z-20">
+            {/* --- 2. НАВИГАЦИЯ СТРОГО ПО ЦЕНТРУ --- */}
+            <div className="hidden lg:flex flex-shrink-0 items-center justify-center z-20 ml-10">
+              <NavigationItems pathname={pathname} />
+            </div>
 
+            {/* --- 3. ДЕЙСТВИЯ СТРОГО СПРАВА --- */}
+            {/* flex-1 и justify-end прижимают кнопки к правому краю, уравновешивая логотип */}
+            <div className="flex-1 flex items-center justify-end gap-4 z-20">
               <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="lg:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5 text-white bg-purple-500/15 border border-purple-500/40 rounded-xl backdrop-blur-sm">
                 <span className={`w-5 h-[2px] bg-current rounded-full transition-all duration-300 ${mobileMenuOpen ? 'rotate-45 translate-y-2' : ''}`}></span>
                 <span className={`w-5 h-[2px] bg-current rounded-full transition-all duration-300 ${mobileMenuOpen ? 'opacity-0' : ''}`}></span>
@@ -182,7 +182,6 @@ const Header = () => {
                 </div>
               </Link>
             </div>
-
           </header>
         </div>
       </div>
