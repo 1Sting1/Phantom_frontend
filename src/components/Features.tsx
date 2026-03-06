@@ -10,7 +10,7 @@ const FeatureCard = ({ title, description, footerText }: { title: string, descri
       <div className="absolute inset-0 bg-grid-pattern opacity-[0.03] pointer-events-none group-hover:opacity-[0.06] transition-opacity"></div>
 
       <div className="relative z-10 flex flex-col flex-grow">
-        <h3 className="text-xl sm:text-2xl font-bold text-[#8B5CF6] mb-4 sm:mb-6 leading-tight whitespace-pre-line">{title}</h3>
+        <h3 className="text-xl sm:text-2xl font-bold text-[#8B5CF6] mb-4 sm:mb-6 leading-tight whitespace-pre-line">{title.replace(/\\n/g, '\n')}</h3>
         <p className="text-gray-400 text-xs sm:text-sm leading-relaxed mb-auto flex-grow">{description}</p>
       </div>
 

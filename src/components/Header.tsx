@@ -198,10 +198,12 @@ const Header = () => {
         <div className={`absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ${mobileMenuOpen ? 'opacity-100' : 'opacity-0'}`} onClick={() => setMobileMenuOpen(false)}></div>
         <div className={`absolute top-0 right-0 h-full w-[280px] sm:w-[320px] border-l border-purple-500/30 shadow-2xl transition-transform duration-300 overflow-hidden ${mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
           <div className="absolute inset-0 bg-gradient-to-br from-[#1a0f2e] via-[#0F0C16] to-[#0a0514]"></div>
-          <div className="relative h-full flex flex-col z-10">
-            <div className="p-6 border-b border-white/10 flex justify-between items-center">
+          <div className="relative h-full flex flex-col z-10 pt-28 overflow-y-auto">
+            <div className="px-6 pb-4 border-b border-white/10 flex justify-between items-center">
               <span className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-purple-400">Menu</span>
-              <button onClick={() => setMobileMenuOpen(false)} className="text-gray-400 hover:text-white"><svg width="24" height="24" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+              <button onClick={() => setMobileMenuOpen(false)} className="text-gray-400 hover:text-white p-2">
+                <svg width="24" height="24" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+              </button>
             </div>
             <nav className="flex flex-col p-6 gap-4">
               <Link href="/install" onClick={() => setMobileMenuOpen(false)} className="text-lg py-3 px-4 text-gray-300 hover:text-white hover:bg-white/5 rounded-lg">{t.header.install}</Link>

@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { useLanguage } from '@/context/LanguageContext';
+import { motion, useScroll, useTransform, useMotionValueEvent } from 'framer-motion';
 
 interface CarouselSlide {
   id: string;
@@ -77,182 +78,203 @@ const Carousel = () => {
       });
   }, [t]);
 
-  // Auto-advance slides
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 6000);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-    return () => clearInterval(timer);
-  }, [slides.length]);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ['start start', 'end end']
+  });
+
+  // Calculate the maximum translate. For 3 slides, it translates up to -200%
+  const maxTranslate = slides.length > 1 ? (slides.length - 1) * 100 : 0;
+
+  // Transform scroll progress (0 to 1) to translateY percentage
+  const yTransform = useTransform(scrollYProgress, [0, 1], ['0%', `-${maxTranslate}%`]);
+
+  // Update current slide for pagination dots
+  useMotionValueEvent(scrollYProgress, "change", (latest) => {
+    if (slides.length > 0) {
+      const activeIdx = Math.round(latest * (slides.length - 1));
+      if (activeIdx !== currentSlide) {
+        setCurrentSlide(activeIdx);
+      }
+    }
+  });
 
   const goToSlide = (index: number) => {
-    setCurrentSlide(index);
+    // Scroll to the specific slide within the sticky context
+    if (containerRef.current) {
+      const start = containerRef.current.offsetTop;
+      const scrollableHeight = containerRef.current.scrollHeight - window.innerHeight;
+      const targetScroll = start + (scrollableHeight * (index / (slides.length - 1)));
+      window.scrollTo({ top: targetScroll, behavior: 'smooth' });
+    }
   };
 
   return (
-    <section className="py-20 w-full relative overflow-hidden min-h-[800px] flex flex-col justify-center">
-      {/* Background Ambience */}
-      <div className="absolute inset-0 bg-[#0F0C16] pointer-events-none"></div>
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-900/40 via-purple-950/20 to-[#0F0C16] pointer-events-none"></div>
-      {/* Animated Blobs */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-        <div className={`absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-purple-600/20 rounded-full mix-blend-screen filter blur-3xl opacity-30 animate-blob`}></div>
-        <div className={`absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-blue-600/20 rounded-full mix-blend-screen filter blur-3xl opacity-30 animate-blob animation-delay-2000`}></div>
-      </div>
+    <section ref={containerRef} className="w-full relative min-h-[300vh]">
+      <div className="sticky top-0 h-screen w-full overflow-hidden flex flex-col justify-center">
+        {/* Background Ambience */}
+        <div className="absolute inset-0 bg-[#0F0C16] pointer-events-none"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-900/40 via-purple-950/20 to-[#0F0C16] pointer-events-none"></div>
+        {/* Animated Blobs */}
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+          <div className={`absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-purple-600/20 rounded-full mix-blend-screen filter blur-3xl opacity-30 animate-blob`}></div>
+          <div className={`absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-blue-600/20 rounded-full mix-blend-screen filter blur-3xl opacity-30 animate-blob animation-delay-2000`}></div>
+        </div>
 
 
-      <div className="max-w-[1920px] mx-auto w-full px-4 md:px-8 relative z-10">
+        <div className="max-w-[1920px] mx-auto w-full px-4 md:px-8 relative z-10 h-full flex flex-col justify-center">
 
-        {/* Carousel Container */}
-        <div className="relative h-[800px] md:h-[900px] lg:h-[1000px] overflow-hidden">
-          {/* Sliding Track */}
-          {/* Sliding Track */}
-          <div
-            className="flex flex-col h-full transition-transform duration-700 ease-[cubic-bezier(0.25,0.1,0.25,1.0)]"
-            style={{ transform: `translateY(-${currentSlide * 100}%)` }}
-          >
-            {slides.length === 0 && loading ? (
-              <div className="w-full min-h-full flex items-center justify-center">
-                <p className="text-gray-400">{t.carousel.loading}</p>
-              </div>
-            ) : (
-              slides.map((slide, index) => {
-                // Determine slide type based on index (for compatibility)
-                const slideType = index % 3 === 1 ? 'mobile-only' : 'desktop-mobile';
+          {/* Carousel Container */}
+          <div className="relative h-[850px] sm:h-[800px] md:h-[900px] lg:h-[1000px] max-h-screen overflow-hidden pt-8 md:pt-0">
+            {/* Sliding Track */}
+            <motion.div
+              className="flex flex-col h-full"
+              style={{ y: yTransform }}
+            >
+              {slides.length === 0 && loading ? (
+                <div className="w-full min-h-full flex items-center justify-center">
+                  <p className="text-gray-400">{t.carousel.loading}</p>
+                </div>
+              ) : (
+                slides.map((slide, index) => {
+                  // Determine slide type based on index (for compatibility)
+                  const slideType = index % 3 === 1 ? 'mobile-only' : 'desktop-mobile';
 
-                return (
-                  <div
-                    key={slide.id}
-                    className="w-full min-h-full relative flex-shrink-0"
-                  >
-                    <div className="flex flex-col items-center h-full">
-                      {/* Title */}
-                      <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white text-center mb-12 max-w-5xl mx-auto leading-normal">
-                        {slide.title || 'Phantom'}
-                      </h2>
+                  return (
+                    <div
+                      key={slide.id}
+                      className="w-full h-full relative flex-shrink-0"
+                    >
+                      <div className="flex flex-col items-center h-full">
+                        {/* Title */}
+                        <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white text-center mb-6 md:mb-12 max-w-[90%] md:max-w-5xl mx-auto leading-tight md:leading-normal px-2 mt-4 sm:mt-0">
+                          {slide.title || 'Phantom'}
+                        </h2>
 
-                      {/* Visuals Container */}
-                      <div className="relative flex-1 w-full flex justify-center items-center">
+                        {/* Visuals Container */}
+                        <div className="relative flex-1 w-full flex justify-center items-center">
 
-                        {/* SCENARIO 1: Desktop + Mobile (Slides 1 & 3) */}
-                        {slideType === 'desktop-mobile' && (
-                          <div className="relative w-full max-w-6xl flex justify-center items-center">
-                            {/* Desktop Screen - Behind */}
-                            <div className="relative w-[900px] h-[600px] bg-[#0A0A0A] rounded-[30px] border border-white/10 shadow-2xl mr-32 z-0 overflow-hidden group">
-                              {/* Screen Glow */}
-                              <div className="absolute inset-0 bg-gradient-to-br from-purple-900/10 via-transparent to-blue-900/10 pointer-events-none"></div>
-
-                              {/* Content */}
-                              <div className="flex flex-col items-center justify-center pt-16">
-                                {/* 3D Logo */}
-                                <div className="relative w-32 h-32 mb-4">
-                                  <Image
-                                    src="/phantom-ghost.png"
-                                    alt="Phantom Logo"
-                                    fill
-                                    className="object-contain drop-shadow-[0_0_20px_rgba(139,92,246,0.6)]"
-                                  />
-                                </div>
-                                {/* Chat List */}
-                                <div className="w-[500px] space-y-4">
-                                  <ChatListItems />
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* Mobile Phone - Front Right Overlap */}
-                            <div className="absolute right-[10%] lg:right-[15%] top-1/2 -translate-y-1/2 z-20">
-                              <div className="relative w-[320px] h-[650px] bg-[#0A0A0A] rounded-[45px] border-[6px] border-[#1a1a1a] shadow-2xl overflow-hidden transition-all duration-500 ease-out hover:scale-[1.03] hover:shadow-[0_20px_60px_rgba(0,0,0,0.6)]">
-                                {/* Notch & Status Bar */}
-                                <div className="absolute top-0 inset-x-0 h-8 z-30 flex justify-between px-6 items-center pt-2">
-                                  <span className="text-white text-xs font-medium">9:41</span>
-                                  <div className="w-16 h-5 bg-black rounded-b-xl absolute left-1/2 -translate-x-1/2 top-0"></div>
-                                  <div className="w-4 h-2.5 border border-white/60 rounded-[2px] relative"><div className="absolute inset-0.5 bg-white rounded-[1px]"></div></div>
-                                </div>
+                          {/* SCENARIO 1: Desktop + Mobile (Slides 1 & 3) */}
+                          {slideType === 'desktop-mobile' && (
+                            <div className="relative w-full max-w-6xl flex justify-center items-center h-full pb-8 md:pb-0">
+                              {/* Desktop Screen - Behind */}
+                              <div className="hidden md:block relative w-[900px] h-[600px] bg-[#0A0A0A] rounded-[30px] border border-white/10 shadow-2xl mr-32 z-0 overflow-hidden group">
+                                {/* Screen Glow */}
+                                <div className="absolute inset-0 bg-gradient-to-br from-purple-900/10 via-transparent to-blue-900/10 pointer-events-none"></div>
 
                                 {/* Content */}
-                                <div className="flex flex-col items-center pt-20 px-4 h-full bg-gradient-to-b from-[#13111A] to-[#0F0C16]">
-                                  {/* Small Logo */}
-                                  <div className="relative w-16 h-16 mb-8">
+                                <div className="flex flex-col items-center justify-center pt-16">
+                                  {/* 3D Logo */}
+                                  <div className="relative w-32 h-32 mb-4">
                                     <Image
                                       src="/phantom-ghost.png"
                                       alt="Phantom Logo"
                                       fill
-                                      className="object-contain drop-shadow-[0_0_15px_rgba(139,92,246,0.6)]"
+                                      className="object-contain drop-shadow-[0_0_20px_rgba(139,92,246,0.6)]"
+                                    />
+                                  </div>
+                                  {/* Chat List */}
+                                  <div className="w-[500px] space-y-4">
+                                    <ChatListItems />
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Mobile Phone - Front Right Overlap */}
+                              <div className="absolute left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:right-[10%] lg:right-[15%] top-1/2 -translate-y-1/2 z-20 transform scale-[0.80] sm:scale-[0.85] md:scale-100">
+                                <div className="relative w-[320px] h-[650px] bg-[#0A0A0A] rounded-[45px] border-[6px] border-[#1a1a1a] shadow-2xl overflow-hidden transition-all duration-500 ease-out hover:scale-[1.03] hover:shadow-[0_20px_60px_rgba(0,0,0,0.6)]">
+                                  {/* Notch & Status Bar */}
+                                  <div className="absolute top-0 inset-x-0 h-8 z-30 flex justify-between px-6 items-center pt-2">
+                                    <span className="text-white text-xs font-medium">9:41</span>
+                                    <div className="w-16 h-5 bg-black rounded-b-xl absolute left-1/2 -translate-x-1/2 top-0"></div>
+                                    <div className="w-4 h-2.5 border border-white/60 rounded-[2px] relative"><div className="absolute inset-0.5 bg-white rounded-[1px]"></div></div>
+                                  </div>
+
+                                  {/* Content */}
+                                  <div className="flex flex-col items-center pt-20 px-4 h-full bg-gradient-to-b from-[#13111A] to-[#0F0C16]">
+                                    {/* Small Logo */}
+                                    <div className="relative w-16 h-16 mb-8">
+                                      <Image
+                                        src="/phantom-ghost.png"
+                                        alt="Phantom Logo"
+                                        fill
+                                        className="object-contain drop-shadow-[0_0_15px_rgba(139,92,246,0.6)]"
+                                      />
+                                    </div>
+
+                                    <div className="w-full space-y-3">
+                                      <ChatListItems compact />
+                                    </div>
+
+                                    {/* Home Indicator */}
+                                    <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1 bg-white/20 rounded-full"></div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+
+                          {/* SCENARIO 2: Mobile Only (Slide 2) */}
+                          {slideType === 'mobile-only' && (
+                            <div className="relative z-20 h-full flex justify-center items-center transform scale-[0.85] sm:scale-95 md:scale-100 lg:scale-110 pb-8 md:pb-0">
+                              <div className="relative w-[340px] h-[700px] bg-[#0A0A0A] rounded-[50px] border-[8px] border-[#1a1a1a] shadow-2xl overflow-hidden transition-all duration-500 ease-out hover:scale-[1.03] hover:shadow-[0_20px_60px_rgba(0,0,0,0.6)]">
+                                {/* Notch & Status Bar */}
+                                <div className="absolute top-0 inset-x-0 h-8 z-30 flex justify-between px-6 items-center pt-3">
+                                  <span className="text-white text-xs font-medium">9:41</span>
+                                  <div className="w-20 h-6 bg-black rounded-b-xl absolute left-1/2 -translate-x-1/2 top-0"></div>
+                                  <div className="w-4 h-2.5 border border-white/60 rounded-[2px] relative"><div className="absolute inset-0.5 bg-white rounded-[1px]"></div></div>
+                                </div>
+
+                                {/* Content */}
+                                <div className="flex flex-col items-center pt-24 px-5 h-full bg-gradient-to-b from-[#13111A] to-[#0F0C16]">
+                                  {/* Larger Logo */}
+                                  <div className="relative w-24 h-24 mb-10">
+                                    <Image
+                                      src="/phantom-ghost.png"
+                                      alt="Phantom Logo"
+                                      fill
+                                      className="object-contain drop-shadow-[0_0_20px_rgba(139,92,246,0.7)]"
                                     />
                                   </div>
 
-                                  <div className="w-full space-y-3">
+                                  <div className="w-full space-y-4">
                                     <ChatListItems compact />
                                   </div>
 
                                   {/* Home Indicator */}
-                                  <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1 bg-white/20 rounded-full"></div>
+                                  <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-white/20 rounded-full"></div>
                                 </div>
                               </div>
                             </div>
-                          </div>
-                        )}
+                          )}
 
-                        {/* SCENARIO 2: Mobile Only (Slide 2) */}
-                        {slideType === 'mobile-only' && (
-                          <div className="relative z-20">
-                            <div className="relative w-[340px] h-[700px] bg-[#0A0A0A] rounded-[50px] border-[8px] border-[#1a1a1a] shadow-2xl overflow-hidden transform scale-110 transition-all duration-500 ease-out hover:scale-[1.13] hover:shadow-[0_20px_60px_rgba(0,0,0,0.6)]">
-                              {/* Notch & Status Bar */}
-                              <div className="absolute top-0 inset-x-0 h-8 z-30 flex justify-between px-6 items-center pt-3">
-                                <span className="text-white text-xs font-medium">9:41</span>
-                                <div className="w-20 h-6 bg-black rounded-b-xl absolute left-1/2 -translate-x-1/2 top-0"></div>
-                                <div className="w-4 h-2.5 border border-white/60 rounded-[2px] relative"><div className="absolute inset-0.5 bg-white rounded-[1px]"></div></div>
-                              </div>
-
-                              {/* Content */}
-                              <div className="flex flex-col items-center pt-24 px-5 h-full bg-gradient-to-b from-[#13111A] to-[#0F0C16]">
-                                {/* Larger Logo */}
-                                <div className="relative w-24 h-24 mb-10">
-                                  <Image
-                                    src="/phantom-ghost.png"
-                                    alt="Phantom Logo"
-                                    fill
-                                    className="object-contain drop-shadow-[0_0_20px_rgba(139,92,246,0.7)]"
-                                  />
-                                </div>
-
-                                <div className="w-full space-y-4">
-                                  <ChatListItems compact />
-                                </div>
-
-                                {/* Home Indicator */}
-                                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-white/20 rounded-full"></div>
-                              </div>
-                            </div>
-                          </div>
-                        )}
-
+                        </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })
-            )}
+                  );
+                })
+              )}
+            </motion.div>
           </div>
-        </div>
 
-        {/* Indicators */}
-        {slides.length > 0 && (
-          <div className="absolute right-8 top-1/2 -translate-y-1/2 flex flex-col gap-3 z-30">
-            {slides.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => goToSlide(index)}
-                className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${index === currentSlide
-                  ? 'bg-white scale-125 shadow-[0_0_10px_rgba(255,255,255,0.5)]'
-                  : 'bg-white/30 hover:bg-white/50'
-                  }`}
-              />
-            ))}
-          </div>
-        )}
+          {/* Indicators */}
+          {slides.length > 0 && (
+            <div className="absolute right-8 top-1/2 -translate-y-1/2 flex flex-col gap-3 z-30">
+              {slides.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => goToSlide(index)}
+                  className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${index === currentSlide
+                    ? 'bg-white scale-125 shadow-[0_0_10px_rgba(255,255,255,0.5)]'
+                    : 'bg-white/30 hover:bg-white/50'
+                    }`}
+                />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </section>
   );
@@ -273,11 +295,11 @@ const ChatListItems = ({ compact = false }: { compact?: boolean }) => {
       {items.map((item, idx) => (
         <div key={idx} className={`
                 group
-                flex items-center gap-4 
-                ${compact ? 'p-3 rounded-2xl' : 'p-4 rounded-xl'}
+                flex items-center gap-3 sm:gap-4 
+                ${compact ? 'p-2 sm:p-3 rounded-2xl' : 'p-3 sm:p-4 rounded-xl'}
                 bg-white/5 border border-white/5 backdrop-blur-md
                 hover:bg-white/10 transition-all duration-300 ease-out cursor-pointer
-                hover:-translate-y-1 hover:shadow-xl
+                hover:-translate-y-1 hover:shadow-xl w-full
                 ${item.color === 'pink' ? 'hover:shadow-pink-500/10 hover:border-pink-500/20' : ''}
                 ${item.color === 'blue' ? 'hover:shadow-blue-500/10 hover:border-blue-500/20' : ''}
                 ${item.color === 'yellow' ? 'hover:shadow-yellow-500/10 hover:border-yellow-500/20' : ''}
