@@ -110,6 +110,7 @@ export const en: Translations = {
     profile: {
         title: 'Profile',
         edit: 'Edit',
+        logout: 'Log out',
         activity: 'Activity',
         days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
         months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
