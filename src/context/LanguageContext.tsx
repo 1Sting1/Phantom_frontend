@@ -71,7 +71,10 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 function getAuthApiBase(): string {
-    return process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:8080/api/v1';
+    const envBase = process.env.NEXT_PUBLIC_API_BASE;
+    if (envBase && !envBase.includes('localhost')) return envBase;
+    if (typeof window !== 'undefined') return window.location.origin + '/api/v1';
+    return envBase || 'http://localhost:8080/api/v1';
 }
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
@@ -141,8 +144,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             const { token: t, refresh_token: r, user: u } = data.data;
             persistAuth(t, r, { id: u.id, email: u.email });
             return { success: true };
-        } catch {
-            return { success: false, error: 'Network error' };
+        } catch (err) {
+            return { success: false, error: 'Ошибка сети. Проверьте подключение и доступность сервера.' };
         }
     }, [persistAuth]);
 
@@ -164,8 +167,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             const { token: t, refresh_token: r, user: u } = data.data;
             persistAuth(t, r, { id: u.id, email: u.email });
             return { success: true };
-        } catch {
-            return { success: false, error: 'Network error' };
+        } catch (err) {
+            return { success: false, error: 'Ошибка сети. Проверьте подключение и доступность сервера.' };
         }
     }, [persistAuth]);
 
