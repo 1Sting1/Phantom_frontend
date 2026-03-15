@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/context/LanguageContext';
 import Header from '@/components/Header';
 import { useRouter } from 'next/navigation';
 
