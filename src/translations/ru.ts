@@ -83,7 +83,7 @@ export const ru = {
         support: 'Поддержка',
         privacy: 'Конфиденциальность',
         terms: 'Условия',
-        copyright: '© 2025 Phantom, Inc.',
+        copyright: '© {year} Phantom, Inc.',
         links: {
             install: 'установка',
             forum: 'форум',
@@ -104,10 +104,16 @@ export const ru = {
         alreadyHaveAccount: 'Уже есть аккаунт?',
         createAccountLink: 'Создать аккаунт',
         loginLink: 'Войти',
+        weakPassword: 'Ой, этот пароль слишком простой! Придумайте что-то надёжнее (не 123456 или qwerty).',
+        shortPassword: 'Пароль должен содержать минимум 8 символов.',
     },
     profile: {
         title: 'Профиль',
         edit: 'Редактировать',
+        save: 'Сохранить',
+        cancel: 'Отмена',
+        nicknameTaken: 'Этот никнейм уже занят',
+        chooseAvatar: 'Выберите аватар',
         logout: 'Выйти',
         activity: 'Активность',
         days: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
@@ -130,6 +136,19 @@ export const ru = {
         locked: 'Закрыто',
         author: 'Автор',
         views: 'Просмотров',
+        create_thread_title: 'Создание нового треда',
+        thread_title: 'Заголовок',
+        thread_content: 'Содержание',
+        thread_category: 'Категория',
+        select_category: 'Выберите категорию',
+        btn_create: 'Опубликовать трейд',
+        login_required: 'Пожалуйста, войдите в аккаунт, чтобы создать тред.',
+        creating: 'Создание...',
+        category_names: {
+            general: 'Основной раздел',
+            news: 'Новости',
+            guides: 'Гайды и инструкции'
+        }
     },
     docs_page: {
         title: 'Документация',

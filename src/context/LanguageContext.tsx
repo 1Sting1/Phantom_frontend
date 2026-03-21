@@ -71,10 +71,8 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 function getAuthApiBase(): string {
-    const envBase = process.env.NEXT_PUBLIC_API_BASE;
-    if (envBase && !envBase.includes('localhost')) return envBase;
     if (typeof window !== 'undefined') return window.location.origin + '/api/v1';
-    return envBase || 'http://localhost:8080/api/v1';
+    return process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:3000/api/v1';
 }
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {

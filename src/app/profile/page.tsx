@@ -4,10 +4,12 @@ import React, { useState, useEffect } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useAuth } from '@/context/LanguageContext';
 import Header from '@/components/Header';
+import { GhostAvatar, GHOST_AVATARS } from '@/components/GhostAvatar';
 import { useRouter } from 'next/navigation';
 
 function getApiBase(): string {
-  return process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:8080/api/v1';
+  if (typeof window !== 'undefined') return window.location.origin + '/api/v1';
+  return process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:3000/api/v1';
 }
 
 export default function ProfilePage() {
@@ -15,7 +17,13 @@ export default function ProfilePage() {
   const { token, isAuthenticated, isReady, logout } = useAuth();
   const router = useRouter();
   const [displayName, setDisplayName] = useState<string>('');
+  const [avatarUrl, setAvatarUrl] = useState<string>('ghost-1');
   const [loading, setLoading] = useState(true);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editName, setEditName] = useState('');
+  const [editAvatar, setEditAvatar] = useState('ghost-1');
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     if (!isReady) return;
@@ -29,8 +37,9 @@ export default function ProfilePage() {
     })
       .then((res) => res.json())
       .then((data) => {
-        if (data?.success && data?.data?.display_name !== undefined) {
-          setDisplayName(data.data.display_name || '');
+        if (data?.success) {
+          if (data.data?.display_name !== undefined) setDisplayName(data.data.display_name || '');
+          if (data.data?.avatar_url) setAvatarUrl(data.data.avatar_url);
         }
       })
       .catch(() => {})
@@ -40,6 +49,39 @@ export default function ProfilePage() {
   const handleLogout = () => {
     logout();
     router.replace('/login');
+  };
+
+  const handleEdit = () => {
+    setEditName(displayName || '');
+    setEditAvatar(avatarUrl || 'ghost-1');
+    setIsEditing(true);
+  };
+
+  const handleSave = async () => {
+    setSaving(true);
+    setError('');
+    try {
+      const base = getApiBase();
+      const res = await fetch(`${base}/user/profile`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ display_name: editName, avatar_url: editAvatar })
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setDisplayName(editName);
+        setAvatarUrl(editAvatar);
+        setIsEditing(false);
+      } else {
+        setError(data?.error === 'nickname_taken' ? t.profile.nicknameTaken : (data?.error || 'Failed to update profile'));
+      }
+    } catch (err) {
+      setError('Network error');
+    }
+    setSaving(false);
   };
 
   if (!isReady || !isAuthenticated) {
@@ -79,28 +121,76 @@ export default function ProfilePage() {
         <div className="flex flex-col md:flex-row gap-8 lg:gap-14">
           
           <div className="flex flex-col items-center w-full md:w-[320px] shrink-0">
-            <div className="w-[180px] h-[180px] rounded-full bg-[#D1C9C5] mb-6"></div>
+            {isEditing ? (
+              <div className="flex flex-col items-center w-full mb-6">
+                <div className="text-[12px] text-gray-400 mb-3 uppercase tracking-wider font-semibold">{t.profile.chooseAvatar}</div>
+                <div className="flex flex-wrap justify-center gap-4 mb-3">
+                  {GHOST_AVATARS.map((g) => (
+                    <button
+                      key={g.id}
+                      onClick={() => setEditAvatar(g.id)}
+                      className={`relative flex items-center justify-center w-20 h-20 rounded-full transition-all bg-[#0A0A0A] ${editAvatar === g.id ? 'border-[3px] border-white scale-110 shadow-[0_0_20px_rgba(255,255,255,0.15)]' : 'border-2 border-transparent opacity-60 hover:opacity-100 hover:scale-105'}`}
+                      title={g.name}
+                    >
+                      <GhostAvatar id={g.id} size={70} />
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center justify-center w-[200px] h-[200px] rounded-full bg-[#0A0A0A] mb-6 border-2 border-white/5 shadow-2xl overflow-visible">
+                <GhostAvatar id={avatarUrl || 'ghost-1'} size={180} />
+              </div>
+            )}
             
-            <h2 className="text-[22px] font-medium mb-2">Nickname</h2>
-            <p className="text-gray-400 text-sm mb-6 min-h-[1.5rem]">
-              {loading ? '...' : (displayName || '—')}
-            </p>
+            {isEditing ? (
+              <div className="flex flex-col items-center w-full mb-6 relative">
+                <input
+                  type="text"
+                  value={editName}
+                  onChange={(e) => setEditName(e.target.value)}
+                  className="w-full bg-[#252330] border border-transparent focus:border-purple-500/50 rounded-xl px-4 py-2 text-white outline-none transition-colors text-center text-[22px] font-medium"
+                  placeholder="Nickname"
+                  maxLength={30}
+                  autoFocus
+                />
+                {error && <p className="text-red-400 text-xs absolute -bottom-5">{error}</p>}
+              </div>
+            ) : (
+              <>
+                <h2 className="text-[22px] font-medium mb-2">{loading ? '...' : (displayName || 'User')}</h2>
+                <p className="text-gray-400 text-sm mb-6 min-h-[1.5rem]"></p>
+              </>
+            )}
             
-            <button className="flex items-center justify-center gap-2 w-full max-w-[240px] py-3.5 bg-[#1C1A26] hover:bg-[#252330] rounded-xl text-white font-medium outline-none transition-colors border border-white/5 shadow-sm mb-4">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M12 20h9" />
-                <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />
-              </svg>
-              {t.profile.edit}
-            </button>
+            {isEditing ? (
+              <div className="flex gap-2 w-full max-w-[240px] mb-4">
+                <button onClick={handleSave} disabled={saving} className="flex-1 py-3 bg-purple-600 hover:bg-purple-700 rounded-xl text-white font-medium outline-none transition-colors shadow-sm text-sm">
+                  {saving ? '...' : (t.profile.save || 'Save')}
+                </button>
+                <button onClick={() => { setIsEditing(false); setError(''); }} disabled={saving} className="flex-1 py-3 bg-[#1C1A26] hover:bg-[#252330] rounded-xl text-white font-medium outline-none transition-colors border border-white/5 shadow-sm text-sm">
+                  {t.profile.cancel || 'Cancel'}
+                </button>
+              </div>
+            ) : (
+              <button onClick={handleEdit} className="flex items-center justify-center gap-2 w-full max-w-[240px] py-3.5 bg-[#1C1A26] hover:bg-[#252330] rounded-xl text-white font-medium outline-none transition-colors border border-white/5 shadow-sm mb-4">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 20h9" />
+                  <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />
+                </svg>
+                {t.profile.edit}
+              </button>
+            )}
 
-            <button
-              type="button"
-              onClick={handleLogout}
-              className="flex items-center justify-center gap-2 w-full max-w-[240px] py-3.5 bg-[#1C1A26] hover:bg-[#252330] rounded-xl text-gray-400 hover:text-white font-medium outline-none transition-colors border border-white/5 shadow-sm mb-10"
-            >
-              {t.profile.logout}
-            </button>
+            {!isEditing && (
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="flex items-center justify-center gap-2 w-full max-w-[240px] py-3.5 bg-[#1C1A26] hover:bg-[#252330] rounded-xl text-gray-400 hover:text-white font-medium outline-none transition-colors border border-white/5 shadow-sm mb-10"
+              >
+                {t.profile.logout}
+              </button>
+            )}
 
             <div className="w-full max-w-[240px] bg-[#16141D] rounded-2xl p-5 shadow-lg border border-white/5">
               <div className="flex items-center gap-2 mb-4">

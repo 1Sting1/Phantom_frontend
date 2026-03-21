@@ -85,7 +85,7 @@ export const en: Translations = {
         support: 'Support',
         privacy: 'Privacy',
         terms: 'Terms',
-        copyright: '© 2025 Phantom, Inc.',
+        copyright: '© {year} Phantom, Inc.',
         links: {
             install: 'install',
             forum: 'forum',
@@ -106,10 +106,16 @@ export const en: Translations = {
         alreadyHaveAccount: 'Already have an account?',
         createAccountLink: 'Create account',
         loginLink: 'Login',
+        weakPassword: 'Oops, this password is too simple! Please choose a more secure one (not 123456 or qwerty).',
+        shortPassword: 'Password must be at least 8 characters long.',
     },
     profile: {
         title: 'Profile',
         edit: 'Edit',
+        save: 'Save',
+        cancel: 'Cancel',
+        nicknameTaken: 'This nickname is already taken',
+        chooseAvatar: 'Choose avatar',
         logout: 'Log out',
         activity: 'Activity',
         days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
@@ -132,6 +138,19 @@ export const en: Translations = {
         locked: 'Locked',
         author: 'Author',
         views: 'Views',
+        create_thread_title: 'Create new thread',
+        thread_title: 'Title',
+        thread_content: 'Content',
+        thread_category: 'Category',
+        select_category: 'Select a category',
+        btn_create: 'Publish thread',
+        login_required: 'Please log in to create a thread.',
+        creating: 'Creating...',
+        category_names: {
+            general: 'General',
+            news: 'News',
+            guides: 'Guides & Tutorials'
+        }
     },
     docs_page: {
         title: 'Documentation',

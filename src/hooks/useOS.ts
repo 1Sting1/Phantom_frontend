@@ -11,6 +11,19 @@ export const useOS = (): OS => {
     // Only run on client side
     if (typeof window === 'undefined') return;
 
+    // Check URL parameters first for explicit overrides
+    const params = new URLSearchParams(window.location.search);
+    const osParam = params.get('os');
+    
+    if (osParam) {
+      const lower = osParam.toLowerCase();
+      if (lower === 'windows') return setOS('Windows');
+      if (lower === 'macos' || lower === 'mac') return setOS('MacOS');
+      if (lower === 'linux') return setOS('Linux');
+      if (lower === 'android') return setOS('Android');
+      if (lower === 'ios') return setOS('iOS');
+    }
+
     const userAgent = window.navigator.userAgent.toLowerCase();
 
     if (userAgent.includes('windows') || userAgent.includes('win')) {

@@ -28,6 +28,17 @@ export default function RegisterPage() {
       setError('Passwords do not match');
       return;
     }
+
+    if (password.length < 8) {
+      setError(t.auth.shortPassword || 'Password must be at least 8 characters long');
+      return;
+    }
+
+    const weakPasswords = ['123123', '123456', '12345678', 'password', 'qwerty', '123456789'];
+    if (weakPasswords.includes(password.toLowerCase())) {
+      setError(t.auth.weakPassword || 'Password is too weak');
+      return;
+    }
     setLoading(true);
     const result = await register(email, password);
     setLoading(false);

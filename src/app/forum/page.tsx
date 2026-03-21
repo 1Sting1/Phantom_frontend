@@ -38,7 +38,7 @@ export default function ForumPage() {
 
   useEffect(() => {
     // Load categories
-    fetch(`${process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:8080/api/v1'}/forum/categories`)
+    fetch('/api/v1/forum/categories')
       .then(res => res.json())
       .then(data => {
         if (data.data && Array.isArray(data.data)) {
@@ -121,7 +121,9 @@ export default function ForumPage() {
                     >
                       {t.forum_page.all_categories}
                     </button>
-                    {categories.map((category) => (
+                    {categories.map((category) => {
+                      const translatedName = t.forum_page.category_names ? (t.forum_page.category_names as any)[category.slug] : null;
+                      return (
                       <button
                         key={category.id}
                         onClick={() => setSelectedCategory(category.id)}
@@ -131,9 +133,9 @@ export default function ForumPage() {
                             : 'text-gray-300 hover:bg-white/5'
                         }`}
                       >
-                        {category.name}
+                        {translatedName || category.name}
                       </button>
-                    ))}
+                    )})}
                   </div>
                 )}
               </div>

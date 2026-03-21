@@ -270,7 +270,7 @@ const Hero = () => {
           {/* Platforms Grid */}
           <div className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4 w-full mb-6 sm:mb-8 relative z-10">
             {/* Android */}
-            <Link href="/install" className="relative flex items-center justify-center gap-3 bg-[#1C1A26] hover:bg-[#252330] py-4 px-4 rounded-2xl text-white font-medium transition-all duration-500 ease-out border border-white/5 hover:border-green-500/40 hover:shadow-lg hover:shadow-green-500/20 group overflow-hidden animate-platform-hover hover:-translate-y-1">
+            <Link href="/install?os=android" className="relative flex items-center justify-center gap-3 bg-[#1C1A26] hover:bg-[#252330] py-4 px-4 rounded-2xl text-white font-medium transition-all duration-500 ease-out border border-white/5 hover:border-green-500/40 hover:shadow-lg hover:shadow-green-500/20 group overflow-hidden animate-platform-hover hover:-translate-y-1">
               <div className="absolute inset-0 bg-gradient-to-br from-green-500/0 via-green-500/0 to-green-500/0 group-hover:from-green-500/10 group-hover:via-green-500/5 group-hover:to-green-500/10 transition-all duration-500 ease-out"></div>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out"></div>
               <svg className="relative z-10 w-6 h-6 shrink-0 fill-white group-hover:scale-110 group-hover:drop-shadow-[0_0_8px_rgba(34,197,94,0.6)] transition-all duration-500 ease-out group-hover:rotate-12" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -281,7 +281,7 @@ const Hero = () => {
             </Link>
 
             {/* iOS */}
-            <Link href="/install" className="relative flex items-center justify-center gap-3 bg-[#1C1A26] hover:bg-[#252330] py-4 px-4 rounded-2xl text-white font-medium transition-all duration-500 ease-out border border-white/5 hover:border-blue-500/40 hover:shadow-lg hover:shadow-blue-500/20 group overflow-hidden animate-platform-hover hover:-translate-y-1">
+            <Link href="/install?os=ios" className="relative flex items-center justify-center gap-3 bg-[#1C1A26] hover:bg-[#252330] py-4 px-4 rounded-2xl text-white font-medium transition-all duration-500 ease-out border border-white/5 hover:border-blue-500/40 hover:shadow-lg hover:shadow-blue-500/20 group overflow-hidden animate-platform-hover hover:-translate-y-1">
               <div className="absolute inset-0 bg-gradient-to-br from-blue-500/0 via-blue-500/0 to-blue-500/0 group-hover:from-blue-500/10 group-hover:via-blue-500/5 group-hover:to-blue-500/10 transition-all duration-500 ease-out"></div>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out"></div>
               <svg className="relative z-10 w-6 h-6 shrink-0 fill-white group-hover:scale-110 group-hover:drop-shadow-[0_0_8px_rgba(59,130,246,0.6)] transition-all duration-500 ease-out group-hover:rotate-12" viewBox="0 0 384 512" xmlns="http://www.w3.org/2000/svg">
@@ -291,7 +291,7 @@ const Hero = () => {
             </Link>
 
             {/* Linux - PNG Icon */}
-            <Link href="/install" className="relative flex items-center justify-center gap-3 bg-[#1C1A26] hover:bg-[#252330] py-4 px-4 rounded-2xl text-white font-medium transition-all duration-500 ease-out border border-white/5 hover:border-yellow-500/40 hover:shadow-lg hover:shadow-yellow-500/20 group overflow-hidden animate-platform-hover hover:-translate-y-1">
+            <Link href="/install?os=linux" className="relative flex items-center justify-center gap-3 bg-[#1C1A26] hover:bg-[#252330] py-4 px-4 rounded-2xl text-white font-medium transition-all duration-500 ease-out border border-white/5 hover:border-yellow-500/40 hover:shadow-lg hover:shadow-yellow-500/20 group overflow-hidden animate-platform-hover hover:-translate-y-1">
               <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/0 via-yellow-500/0 to-yellow-500/0 group-hover:from-yellow-500/10 group-hover:via-yellow-500/5 group-hover:to-yellow-500/10 transition-all duration-500 ease-out"></div>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out"></div>
               <img
@@ -303,7 +303,7 @@ const Hero = () => {
             </Link>
 
             {/* MacOS */}
-            <Link href="/install" className="relative flex items-center justify-center gap-3 bg-[#1C1A26] hover:bg-[#252330] py-4 px-4 rounded-2xl text-white font-medium transition-all duration-500 ease-out border border-white/5 hover:border-purple-500/40 hover:shadow-lg hover:shadow-purple-500/20 group overflow-hidden animate-platform-hover hover:-translate-y-1">
+            <Link href="/install?os=macos" className="relative flex items-center justify-center gap-3 bg-[#1C1A26] hover:bg-[#252330] py-4 px-4 rounded-2xl text-white font-medium transition-all duration-500 ease-out border border-white/5 hover:border-purple-500/40 hover:shadow-lg hover:shadow-purple-500/20 group overflow-hidden animate-platform-hover hover:-translate-y-1">
               <div className="absolute inset-0 bg-gradient-to-br from-purple-500/0 via-purple-500/0 to-purple-500/0 group-hover:from-purple-500/10 group-hover:via-purple-500/5 group-hover:to-purple-500/10 transition-all duration-500 ease-out"></div>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out"></div>
               <svg className="relative z-10 w-6 h-6 shrink-0 fill-white group-hover:scale-110 group-hover:drop-shadow-[0_0_8px_rgba(139,92,246,0.6)] transition-all duration-500 ease-out group-hover:rotate-12" viewBox="0 0 384 512" xmlns="http://www.w3.org/2000/svg">

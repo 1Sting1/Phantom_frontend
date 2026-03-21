@@ -134,7 +134,7 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="flex flex-col md:flex-row justify-between items-center border-t border-white/5 pt-8">
           <div className="text-gray-500 text-xs mb-4 md:mb-0">
-            {t.footer.copyright}
+            {t.footer.copyright.replace('{year}', new Date().getFullYear().toString())}
           </div>
 
           {/* Language Selector Selector */}
