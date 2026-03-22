@@ -47,12 +47,18 @@ const ForumCTA = () => {
                     </div>
 
                     {/* Large Ghost Image - Right Side */}
-                    <div className="absolute -right-20 -bottom-32 w-[600px] h-[600px] pointer-events-none hidden sm:block">
+                    <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[480px] h-[480px] pointer-events-none hidden sm:block">
                         <Image
-                            src="/ghost-v2-pink.png"
+                            src="/ghost-v3-pink.png"
                             alt="Forum Ghost"
                             fill
-                            className="object-contain drop-shadow-[0_0_80px_rgba(168,85,247,0.4)]"
+                            quality={100}
+                            unoptimized={true}
+                            className="object-contain mix-blend-screen drop-shadow-[0_0_50px_rgba(168,85,247,0.3)]"
+                            style={{
+                                maskImage: 'radial-gradient(50% 50% at 50% 50%, black 75%, transparent 100%)',
+                                WebkitMaskImage: 'radial-gradient(50% 50% at 50% 50%, black 75%, transparent 100%)'
+                            }}
                         />
                     </div>
                 </div>

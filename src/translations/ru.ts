@@ -96,6 +96,13 @@ export const ru = {
     },
     auth: {
         email: 'E-mail',
+        nickname: 'Никнейм',
+        nicknameAvailable: 'Свободен',
+        checking: 'Проверка...',
+        passwordStrength: 'Надежность: ',
+        strengthWeak: 'Слабый',
+        strengthMedium: 'Средний',
+        strengthStrong: 'Надежный',
         password: 'Пароль',
         passwordRepeat: 'Повторите пароль',
         loginBtn: 'Войти',
@@ -147,8 +154,13 @@ export const ru = {
         category_names: {
             general: 'Основной раздел',
             news: 'Новости',
-            guides: 'Гайды и инструкции'
-        }
+            guides: 'Гайды и инструкции',
+            installation: 'Установка и настройка',
+            features: 'Предложения и идеи',
+            development: 'Разработка'
+        },
+        delete_thread: 'Удалить тред',
+        confirming_delete: 'Удаление...'
     },
     docs_page: {
         title: 'Документация',
@@ -163,6 +175,7 @@ export const ru = {
     common: {
         loading: 'Загрузка...',
         menu: 'Меню',
+        required_field: 'Заполните это поле.',
     }
 };
 

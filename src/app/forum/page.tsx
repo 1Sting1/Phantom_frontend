@@ -55,7 +55,7 @@ export default function ForumPage() {
   useEffect(() => {
     // Load threads
     setThreadsLoading(true);
-    fetch(`${process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:8080/api/v1'}/forum/threads`)
+    fetch(`/api/v1/forum/threads`)
       .then(res => res.json())
       .then(data => {
         if (data.data && Array.isArray(data.data)) {

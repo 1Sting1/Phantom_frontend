@@ -13,9 +13,10 @@ interface FooterLink {
 }
 
 const Footer = () => {
-  const { t, language } = useLanguage();
+  const { t, language, setLanguage } = useLanguage();
   const [footerLinks, setFooterLinks] = useState<FooterLink[]>([]);
   const [loading, setLoading] = useState(true);
+  const [langMenuOpen, setLangMenuOpen] = useState(false);
 
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:8080/api/v1'}/public/footer-links`)
@@ -76,11 +77,11 @@ const Footer = () => {
 
           {/* Column 1 */}
           <div>
-            <h4 className="text-gray-500 text-[10px] sm:text-xs uppercase font-medium mb-4 sm:mb-6">{t.footer.menu}</h4>
+            <h4 className="text-gray-500 text-xs sm:text-sm uppercase font-medium mb-4 sm:mb-6">{t.footer.menu}</h4>
             <ul className="space-y-3 sm:space-y-4">
               {displayLinks.menu.map((link) => (
                 <li key={link.id}>
-                  <Link href={link.href} className="text-gray-300 text-xs sm:text-sm hover:text-white transition-colors">
+                  <Link href={link.href} className="text-gray-300 text-sm sm:text-base hover:text-white transition-colors">
                     {link.title}
                   </Link>
                 </li>
@@ -90,11 +91,11 @@ const Footer = () => {
 
           {/* Column 2 */}
           <div>
-            <h4 className="text-gray-500 text-[10px] sm:text-xs uppercase font-medium mb-4 sm:mb-6">{t.footer.information}</h4>
+            <h4 className="text-gray-500 text-xs sm:text-sm uppercase font-medium mb-4 sm:mb-6">{t.footer.information}</h4>
             <ul className="space-y-3 sm:space-y-4">
               {displayLinks.information.map((link) => (
                 <li key={link.id}>
-                  <Link href={link.href} className="text-gray-300 text-sm hover:text-white transition-colors">
+                  <Link href={link.href} className="text-gray-300 text-base hover:text-white transition-colors">
                     {link.title}
                   </Link>
                 </li>
@@ -104,11 +105,11 @@ const Footer = () => {
 
           {/* Column 3 */}
           <div>
-            <h4 className="text-gray-500 text-xs uppercase font-medium mb-6">{t.footer.social}</h4>
+            <h4 className="text-gray-500 text-sm uppercase font-medium mb-6">{t.footer.social}</h4>
             <ul className="space-y-4">
               {displayLinks.social.map((link) => (
                 <li key={link.id}>
-                  <a href={link.href} className="text-gray-300 text-sm hover:text-white transition-colors">
+                  <a href={link.href} className="text-gray-300 text-base hover:text-white transition-colors">
                     {link.title}
                   </a>
                 </li>
@@ -118,11 +119,11 @@ const Footer = () => {
 
           {/* Column 4 */}
           <div>
-            <h4 className="text-gray-500 text-xs uppercase font-medium mb-6">{t.footer.contact}</h4>
+            <h4 className="text-gray-500 text-sm uppercase font-medium mb-6">{t.footer.contact}</h4>
             <ul className="space-y-4">
               {displayLinks.contact.map((link) => (
                 <li key={link.id}>
-                  <a href={link.href} className="text-gray-300 text-sm hover:text-white transition-colors">
+                  <a href={link.href} className="text-gray-300 text-base hover:text-white transition-colors">
                     {link.title}
                   </a>
                 </li>
@@ -133,15 +134,25 @@ const Footer = () => {
 
         {/* Bottom Bar */}
         <div className="flex flex-col md:flex-row justify-between items-center border-t border-white/5 pt-8">
-          <div className="text-gray-500 text-xs mb-4 md:mb-0">
+          <div className="text-gray-500 text-sm mb-4 md:mb-0">
             {t.footer.copyright.replace('{year}', new Date().getFullYear().toString())}
           </div>
 
-          {/* Language Selector Selector */}
-          <button className="flex items-center gap-2 text-gray-300 text-xs hover:text-white transition-colors">
-            {language === 'ru' ? 'Русский' : 'English'}
-            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
-          </button>
+          <div className="relative">
+            <button 
+              onClick={() => setLangMenuOpen(!langMenuOpen)}
+              className="flex items-center gap-2 text-gray-300 text-sm hover:text-white transition-colors"
+            >
+              {language === 'ru' ? 'Русский' : 'English'}
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 15l7-7 7 7"></path></svg>
+            </button>
+            {langMenuOpen && (
+              <div className="absolute bottom-full right-0 mb-3 bg-[#14121D] border border-purple-500/30 rounded-lg overflow-hidden shadow-xl z-50 min-w-[120px]">
+                <button onClick={() => { setLanguage('ru'); setLangMenuOpen(false); }} className="w-full text-left px-4 py-3 text-sm text-gray-300 hover:bg-white/5 hover:text-white">Русский</button>
+                <button onClick={() => { setLanguage('en'); setLangMenuOpen(false); }} className="w-full text-left px-4 py-3 text-sm text-gray-300 hover:bg-white/5 hover:text-white">English</button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </footer>

@@ -12,6 +12,9 @@ export default function RegisterPage() {
   const { register, isAuthenticated, isReady } = useAuth();
   const router = useRouter();
   const [email, setEmail] = useState('');
+  const [nickname, setNickname] = useState('');
+  const [isNicknameAvailable, setIsNicknameAvailable] = useState<boolean | null>(null);
+  const [isCheckingNickname, setIsCheckingNickname] = useState(false);
   const [password, setPassword] = useState('');
   const [passwordRepeat, setPasswordRepeat] = useState('');
   const [error, setError] = useState('');
@@ -21,9 +24,73 @@ export default function RegisterPage() {
     if (isReady && isAuthenticated) router.replace('/profile');
   }, [isReady, isAuthenticated, router]);
 
+  useEffect(() => {
+    if (nickname.length < 3) {
+      setIsNicknameAvailable(null);
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      setIsCheckingNickname(true);
+      try {
+        const res = await fetch(`/api/v1/public/user/check-nickname?nickname=${encodeURIComponent(nickname)}`);
+        const data = await res.json();
+        if (data.success) {
+          setIsNicknameAvailable(data.data.available);
+        } else {
+          setIsNicknameAvailable(null);
+        }
+      } catch (e) {
+        setIsNicknameAvailable(null);
+      } finally {
+        setIsCheckingNickname(false);
+      }
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [nickname]);
+
+  const getPasswordStrength = (pass: string) => {
+    if (!pass) return { score: 0, label: '', color: 'bg-gray-700 w-0' };
+    let score = 0;
+    if (pass.length >= 8) score += 1;
+    if (/[A-Z]/.test(pass)) score += 1;
+    if (/[0-9]/.test(pass)) score += 1;
+    if (/[^A-Za-z0-9]/.test(pass)) score += 1;
+
+    const weakPasswords = ['123123', '123456', '12345678', 'password', 'qwerty', '123456789'];
+    if (weakPasswords.includes(pass.toLowerCase())) return { score: 1, label: t.auth.strengthWeak, color: 'bg-red-500 w-1/3' };
+
+    switch (score) {
+      case 0:
+      case 1:
+      case 2:
+        return { score: 1, label: t.auth.strengthWeak, color: 'bg-red-500 w-1/3' };
+      case 3:
+        return { score: 2, label: t.auth.strengthMedium, color: 'bg-yellow-500 w-2/3' };
+      case 4:
+        return { score: 3, label: t.auth.strengthStrong, color: 'bg-green-500 w-full' };
+      default:
+        return { score: 0, label: '', color: 'bg-gray-700 w-0' };
+    }
+  };
+
+  const strength = getPasswordStrength(password);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+
+    if (nickname.length < 3) {
+      setError(t.auth.shortPassword || 'Nickname is too short');
+      return;
+    }
+
+    if (isNicknameAvailable === false) {
+      setError(t.profile.nicknameTaken || 'Nickname already taken');
+      return;
+    }
+
     if (password !== passwordRepeat) {
       setError('Passwords do not match');
       return;
@@ -39,12 +106,29 @@ export default function RegisterPage() {
       setError(t.auth.weakPassword || 'Password is too weak');
       return;
     }
+    
     setLoading(true);
     const result = await register(email, password);
-    setLoading(false);
+    
     if (result.success) {
+      // Set chosen nickname upon successful registration
+      try {
+          const token = localStorage.getItem('phantom-token');
+          await fetch('/api/v1/user/profile', {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ display_name: nickname })
+          });
+      } catch (err) {
+          console.error('Failed to set nickname', err);
+      }
+      setLoading(false);
       router.push('/profile');
     } else {
+      setLoading(false);
       setError(result.error || 'Registration failed');
     }
   };
@@ -76,6 +160,29 @@ export default function RegisterPage() {
               />
             </div>
 
+            <div className="space-y-1">
+              <label className="text-gray-400 text-sm pl-1">{t.auth.nickname}</label>
+              <input
+                type="text"
+                value={nickname}
+                onChange={(e) => setNickname(e.target.value)}
+                className="w-full bg-[#252330] border border-transparent focus:border-purple-500/50 rounded-xl px-4 py-3.5 text-white outline-none transition-colors"
+                placeholder=""
+                required
+              />
+              <div className="px-1 min-h-[20px] flex items-center">
+                 {isCheckingNickname ? (
+                   <span className="text-xs text-gray-400 animate-pulse">{t.auth.checking}</span>
+                 ) : nickname.length >= 3 && isNicknameAvailable !== null ? (
+                   isNicknameAvailable ? (
+                     <span className="text-xs text-green-400 font-medium">✓ {t.auth.nicknameAvailable}</span>
+                   ) : (
+                     <span className="text-xs text-red-400 font-medium">× {t.profile.nicknameTaken}</span>
+                   )
+                 ) : null}
+              </div>
+            </div>
+
             <div className="space-y-2">
               <label className="text-gray-400 text-sm pl-1">{t.auth.password}</label>
               <input
@@ -86,6 +193,19 @@ export default function RegisterPage() {
                 placeholder=""
                 required
               />
+              {password.length > 0 && (
+                <div className="pt-1 px-1">
+                   <div className="flex justify-between items-center mb-1">
+                     <span className="text-xs text-gray-500">{t.auth.passwordStrength}</span>
+                     <span className={`text-xs ${strength.score === 3 ? 'text-green-400' : strength.score === 2 ? 'text-yellow-400' : 'text-red-400'}`}>
+                       {strength.label}
+                     </span>
+                   </div>
+                   <div className="w-full h-1 bg-gray-700/50 rounded-full overflow-hidden">
+                     <div className={`h-full transition-all duration-300 ${strength.color}`}></div>
+                   </div>
+                </div>
+              )}
             </div>
 
             <div className="space-y-2">

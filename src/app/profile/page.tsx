@@ -24,6 +24,39 @@ export default function ProfilePage() {
   const [editAvatar, setEditAvatar] = useState('ghost-1');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const [isNicknameAvailable, setIsNicknameAvailable] = useState<boolean | null>(null);
+  const [isCheckingNickname, setIsCheckingNickname] = useState(false);
+
+  useEffect(() => {
+    if (!isEditing) return;
+    if (editName === displayName) {
+      setIsNicknameAvailable(true);
+      return;
+    }
+    if (editName.length < 3) {
+      setIsNicknameAvailable(null);
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      setIsCheckingNickname(true);
+      try {
+        const res = await fetch(`/api/v1/public/user/check-nickname?nickname=${encodeURIComponent(editName)}`);
+        const data = await res.json();
+        if (data.success) {
+          setIsNicknameAvailable(data.data.available);
+        } else {
+          setIsNicknameAvailable(null);
+        }
+      } catch (e) {
+        setIsNicknameAvailable(null);
+      } finally {
+        setIsCheckingNickname(false);
+      }
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [editName, isEditing, displayName]);
 
   useEffect(() => {
     if (!isReady) return;
@@ -58,6 +91,15 @@ export default function ProfilePage() {
   };
 
   const handleSave = async () => {
+    if (editName !== displayName && isNicknameAvailable === false) {
+      setError(t.profile.nicknameTaken || 'Nickname already taken');
+      return;
+    }
+    if (editName.length < 3) {
+      setError('Nickname is too short');
+      return;
+    }
+
     setSaving(true);
     setError('');
     try {
@@ -149,12 +191,24 @@ export default function ProfilePage() {
                   type="text"
                   value={editName}
                   onChange={(e) => setEditName(e.target.value)}
-                  className="w-full bg-[#252330] border border-transparent focus:border-purple-500/50 rounded-xl px-4 py-2 text-white outline-none transition-colors text-center text-[22px] font-medium"
+                  className="w-full bg-[#252330] border border-transparent focus:border-purple-500/50 rounded-xl px-4 py-3 text-white outline-none transition-colors text-center text-[22px] font-medium"
                   placeholder="Nickname"
                   maxLength={30}
                   autoFocus
                 />
-                {error && <p className="text-red-400 text-xs absolute -bottom-5">{error}</p>}
+                <div className="absolute -bottom-6 w-full flex justify-center items-center h-5">
+                   {isCheckingNickname ? (
+                     <span className="text-xs text-gray-400 animate-pulse">{t.auth.checking}</span>
+                   ) : editName.length >= 3 && isNicknameAvailable !== null && editName !== displayName ? (
+                     isNicknameAvailable ? (
+                       <span className="text-xs text-green-400 font-medium">✓ {t.auth.nicknameAvailable}</span>
+                     ) : (
+                       <span className="text-xs text-red-400 font-medium">× {t.profile.nicknameTaken}</span>
+                     )
+                   ) : error ? (
+                     <span className="text-xs text-red-400">{error}</span>
+                   ) : null}
+                </div>
               </div>
             ) : (
               <>

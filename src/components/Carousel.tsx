@@ -119,15 +119,15 @@ const Carousel = () => {
         <div className="absolute inset-0 bg-gradient-to-br from-purple-900/40 via-purple-950/20 to-[#0F0C16] pointer-events-none"></div>
         {/* Animated Blobs */}
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-          <div className={`absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-purple-600/20 rounded-full mix-blend-screen filter blur-3xl opacity-30 animate-blob`}></div>
-          <div className={`absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-blue-600/20 rounded-full mix-blend-screen filter blur-3xl opacity-30 animate-blob animation-delay-2000`}></div>
+          <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-purple-600/15 rounded-full blur-3xl animate-blob will-change-transform transform-gpu"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-blue-600/15 rounded-full blur-3xl animate-blob animation-delay-2000 will-change-transform transform-gpu"></div>
         </div>
 
 
         <div className="max-w-[1920px] mx-auto w-full px-4 md:px-8 relative z-10 h-full flex flex-col justify-center">
 
           {/* Carousel Container */}
-          <div className="relative h-[850px] sm:h-[800px] md:h-[900px] lg:h-[1000px] max-h-screen overflow-hidden pt-8 md:pt-0">
+          <div className="relative h-[850px] sm:h-[800px] md:h-[900px] lg:h-[1000px] max-h-[100dvh] overflow-hidden pt-28 sm:pt-32 md:pt-16 lg:pt-0">
             {/* Sliding Track */}
             <motion.div
               className="flex flex-col h-full"
@@ -149,7 +149,7 @@ const Carousel = () => {
                     >
                       <div className="flex flex-col items-center h-full">
                         {/* Title */}
-                        <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white text-center mb-6 md:mb-12 max-w-[90%] md:max-w-5xl mx-auto leading-tight md:leading-normal px-2 mt-4 sm:mt-0">
+                        <h2 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white text-center mb-8 md:mb-12 max-w-[95%] md:max-w-5xl mx-auto leading-tight md:leading-normal px-2 relative z-30">
                           {slide.title || 'Phantom'}
                         </h2>
 
@@ -183,7 +183,7 @@ const Carousel = () => {
                               </div>
 
                               {/* Mobile Phone - Front Right Overlap */}
-                              <div className="absolute left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:right-[10%] lg:right-[15%] top-1/2 -translate-y-1/2 z-20 transform scale-[0.80] sm:scale-[0.85] md:scale-100">
+                              <div className="absolute left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:right-[10%] lg:right-[15%] top-1/2 -translate-y-1/2 z-20 transform scale-[0.70] sm:scale-[0.80] md:scale-100">
                                 <div className="relative w-[320px] h-[650px] bg-[#0A0A0A] rounded-[45px] border-[6px] border-[#1a1a1a] shadow-2xl overflow-hidden transition-all duration-500 ease-out hover:scale-[1.03] hover:shadow-[0_20px_60px_rgba(0,0,0,0.6)]">
                                   {/* Notch & Status Bar */}
                                   <div className="absolute top-0 inset-x-0 h-8 z-30 flex justify-between px-6 items-center pt-2">
@@ -218,7 +218,7 @@ const Carousel = () => {
 
                           {/* SCENARIO 2: Mobile Only (Slide 2) */}
                           {slideType === 'mobile-only' && (
-                            <div className="relative z-20 h-full flex justify-center items-center transform scale-[0.85] sm:scale-95 md:scale-100 lg:scale-110 pb-8 md:pb-0">
+                            <div className="relative z-20 h-full flex justify-start pt-6 sm:pt-0 sm:justify-center items-start sm:items-center transform scale-[0.75] sm:scale-95 md:scale-100 lg:scale-110 pb-8 md:pb-0">
                               <div className="relative w-[340px] h-[700px] bg-[#0A0A0A] rounded-[50px] border-[8px] border-[#1a1a1a] shadow-2xl overflow-hidden transition-all duration-500 ease-out hover:scale-[1.03] hover:shadow-[0_20px_60px_rgba(0,0,0,0.6)]">
                                 {/* Notch & Status Bar */}
                                 <div className="absolute top-0 inset-x-0 h-8 z-30 flex justify-between px-6 items-center pt-3">
@@ -296,7 +296,7 @@ const ChatListItems = ({ compact = false }: { compact?: boolean }) => {
                   group
                   flex items-center gap-3 sm:gap-4 
                   ${compact ? 'p-2 sm:p-3 rounded-2xl' : 'p-3 sm:p-4 rounded-xl'}
-                  bg-white/5 border border-white/5 backdrop-blur-md
+                  bg-white/5 border border-white/5 backdrop-blur-md transform-gpu
                   hover:bg-white/10 transition-all duration-300 ease-out cursor-pointer
                   hover:-translate-y-1 hover:shadow-xl w-full
                   ${color === 'pink' ? 'hover:shadow-pink-500/10 hover:border-pink-500/20' : ''}

@@ -116,6 +116,8 @@ export default function NewThreadPage() {
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
+                onInvalid={(e) => (e.target as HTMLInputElement).setCustomValidity(t.common?.required_field || 'Required')}
+                onInput={(e) => (e.target as HTMLInputElement).setCustomValidity('')}
                 className="w-full bg-[#252330] border border-transparent focus:border-purple-500/50 rounded-xl px-4 py-3.5 text-white outline-none transition-colors"
                 required
               />
@@ -126,6 +128,8 @@ export default function NewThreadPage() {
               <select
                 value={categoryId}
                 onChange={(e) => setCategoryId(e.target.value)}
+                onInvalid={(e) => (e.target as HTMLSelectElement).setCustomValidity(t.common?.required_field || 'Required')}
+                onInput={(e) => (e.target as HTMLSelectElement).setCustomValidity('')}
                 className="w-full bg-[#252330] border border-transparent focus:border-purple-500/50 rounded-xl px-4 py-3.5 text-white outline-none transition-colors"
                 required
               >
@@ -146,6 +150,8 @@ export default function NewThreadPage() {
               <textarea
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
+                onInvalid={(e) => (e.target as HTMLTextAreaElement).setCustomValidity(t.common?.required_field || 'Required')}
+                onInput={(e) => (e.target as HTMLTextAreaElement).setCustomValidity('')}
                 rows={8}
                 className="w-full bg-[#252330] border border-transparent focus:border-purple-500/50 rounded-xl px-4 py-3.5 text-white outline-none transition-colors resize-y"
                 required

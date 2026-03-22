@@ -16,44 +16,12 @@ interface NavigationItem {
 
 const NavigationItems = ({ pathname }: { pathname: string }) => {
   const { t } = useLanguage();
-  const [items, setItems] = useState<NavigationItem[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:8080/api/v1'}/public/navigation`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.data && Array.isArray(data.data)) {
-          const sortedItems = data.data.sort((a: NavigationItem, b: NavigationItem) => a.order - b.order);
-          setItems(sortedItems);
-        } else {
-          setItems([
-            { id: '1', title: t.header.install, href: '/install', type: 'link', order: 0 },
-            { id: '2', title: t.header.forum, href: '/forum', type: 'link', order: 1 },
-            { id: '3', title: t.header.docs, href: '/docs', type: 'link', order: 2 },
-            { id: '4', title: t.header.donate, href: '/donate', type: 'link', order: 3 }
-          ]);
-        }
-        setLoading(false);
-      })
-      .catch(() => {
-        setItems([
-          { id: '1', title: t.header.install, href: '/install', type: 'link', order: 0 },
-          { id: '2', title: t.header.forum, href: '/forum', type: 'link', order: 1 },
-          { id: '3', title: t.header.docs, href: '/docs', type: 'link', order: 2 },
-          { id: '4', title: t.header.donate, href: '/donate', type: 'link', order: 3 }
-        ]);
-        setLoading(false);
-      });
-  }, [t]);
-
-  if (loading) {
-    return (
-      <nav className="flex items-center justify-center">
-        <div className="w-4 h-4 rounded-full bg-white/10 animate-pulse"></div>
-      </nav>
-    );
-  }
+  const items = [
+    { id: '1', title: t.header.install, href: '/install', type: 'link', order: 0 },
+    { id: '2', title: t.header.forum, href: '/forum', type: 'link', order: 1 },
+    { id: '3', title: t.header.docs, href: '/docs', type: 'link', order: 2 },
+    { id: '4', title: t.header.donate, href: '/donate', type: 'link', order: 3 }
+  ];
 
   return (
     <nav className="flex items-center gap-8 text-[17px] font-medium tracking-wide">

@@ -121,59 +121,59 @@ const Features = () => {
           <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">{t.features.securityTitle}</h2>
         </div>
 
-        <div className="w-full max-w-4xl space-y-0 mb-8 mx-auto">
-          <div className="group flex items-center cursor-default py-4 border-b border-gray-700/50 hover:border-gray-600/50 transition-colors whitespace-nowrap gap-0">
-            <span className="text-xl md:text-2xl font-semibold text-[#8B5CF6] transition-all duration-300 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-purple-400 group-hover:via-pink-400 group-hover:to-purple-400 group-hover:scale-105 group-hover:drop-shadow-[0_0_15px_rgba(139,92,246,0.6)] relative">
+        <div className="w-full max-w-4xl space-y-2 md:space-y-0 mb-8 mx-auto px-2 sm:px-0">
+          <div className="group flex flex-col md:flex-row items-start md:items-center cursor-default py-4 md:py-5 border-b border-gray-700/50 hover:border-gray-600/50 transition-colors gap-2 md:gap-0">
+            <span className="text-xl md:text-2xl font-semibold text-[#8B5CF6] transition-all duration-300 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-purple-400 group-hover:via-pink-400 group-hover:to-purple-400 group-hover:scale-105 group-hover:drop-shadow-[0_0_15px_rgba(139,92,246,0.6)] relative will-change-transform transform-gpu whitespace-nowrap">
               {t.features.securityConfidentiality}
-              <span className="absolute inset-0 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-300 -z-10">{t.features.securityConfidentiality}</span>
+              <span className="absolute inset-0 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-300 -z-10 will-change-opacity transform-gpu">{t.features.securityConfidentiality}</span>
             </span>
-            <span className="text-gray-400 text-lg md:text-xl mx-2">—</span>
-            <span className="text-white text-base md:text-lg">{t.features.securityConfidentialityDesc}</span>
+            <span className="hidden md:inline text-gray-400 text-lg md:text-xl mx-2">—</span>
+            <span className="text-white text-sm md:text-lg opacity-90 leading-relaxed max-w-full md:max-w-none break-words">{t.features.securityConfidentialityDesc}</span>
           </div>
 
-          <div className="group flex items-center cursor-default py-4 border-b border-gray-700/50 hover:border-gray-600/50 transition-colors whitespace-nowrap gap-0">
-            <span className="text-xl md:text-2xl font-semibold text-[#8B5CF6] transition-all duration-300 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-purple-400 group-hover:via-pink-400 group-hover:to-purple-400 group-hover:scale-105 group-hover:drop-shadow-[0_0_15px_rgba(139,92,246,0.6)] relative">
+          <div className="group flex flex-col md:flex-row items-start md:items-center cursor-default py-4 md:py-5 border-b border-gray-700/50 hover:border-gray-600/50 transition-colors gap-2 md:gap-0">
+            <span className="text-xl md:text-2xl font-semibold text-[#8B5CF6] transition-all duration-300 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-purple-400 group-hover:via-pink-400 group-hover:to-purple-400 group-hover:scale-105 group-hover:drop-shadow-[0_0_15px_rgba(139,92,246,0.6)] relative will-change-transform transform-gpu whitespace-nowrap">
               {t.features.securityAuthenticity}
-              <span className="absolute inset-0 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-300 -z-10">{t.features.securityAuthenticity}</span>
+              <span className="absolute inset-0 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-300 -z-10 will-change-opacity transform-gpu">{t.features.securityAuthenticity}</span>
             </span>
-            <span className="text-gray-400 text-lg md:text-xl mx-2">—</span>
-            <span className="text-white text-base md:text-lg">{t.features.securityAuthenticityDesc}</span>
+            <span className="hidden md:inline text-gray-400 text-lg md:text-xl mx-2">—</span>
+            <span className="text-white text-sm md:text-lg opacity-90 leading-relaxed max-w-full md:max-w-none break-words">{t.features.securityAuthenticityDesc}</span>
           </div>
 
-          <div className="group flex items-center cursor-default py-4 border-b border-gray-700/50 hover:border-gray-600/50 transition-colors whitespace-nowrap gap-0">
-            <span className="text-xl md:text-2xl font-semibold text-[#8B5CF6] transition-all duration-300 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-purple-400 group-hover:via-pink-400 group-hover:to-purple-400 group-hover:scale-105 group-hover:drop-shadow-[0_0_15px_rgba(139,92,246,0.6)] relative">
+          <div className="group flex flex-col md:flex-row items-start md:items-center cursor-default py-4 md:py-5 border-b border-gray-700/50 hover:border-gray-600/50 transition-colors gap-2 md:gap-0">
+            <span className="text-xl md:text-2xl font-semibold text-[#8B5CF6] transition-all duration-300 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-purple-400 group-hover:via-pink-400 group-hover:to-purple-400 group-hover:scale-105 group-hover:drop-shadow-[0_0_15px_rgba(139,92,246,0.6)] relative will-change-transform transform-gpu whitespace-nowrap">
               {t.features.securityForwardSecrecy}
-              <span className="absolute inset-0 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-300 -z-10">{t.features.securityForwardSecrecy}</span>
+              <span className="absolute inset-0 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-300 -z-10 will-change-opacity transform-gpu">{t.features.securityForwardSecrecy}</span>
             </span>
-            <span className="text-gray-400 text-lg md:text-xl mx-2">—</span>
-            <span className="text-white text-base md:text-lg">{t.features.securityForwardSecrecyDesc}</span>
+            <span className="hidden md:inline text-gray-400 text-lg md:text-xl mx-2">—</span>
+            <span className="text-white text-sm md:text-lg opacity-90 leading-relaxed max-w-full md:max-w-none break-words">{t.features.securityForwardSecrecyDesc}</span>
           </div>
 
-          <div className="group flex items-center cursor-default py-4 border-b border-gray-700/50 hover:border-gray-600/50 transition-colors whitespace-nowrap gap-0">
-            <span className="text-xl md:text-2xl font-semibold text-[#8B5CF6] transition-all duration-300 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-purple-400 group-hover:via-pink-400 group-hover:to-purple-400 group-hover:scale-105 group-hover:drop-shadow-[0_0_15px_rgba(139,92,246,0.6)] relative">
+          <div className="group flex flex-col md:flex-row items-start md:items-center cursor-default py-4 md:py-5 border-b border-gray-700/50 hover:border-gray-600/50 transition-colors gap-2 md:gap-0">
+            <span className="text-xl md:text-2xl font-semibold text-[#8B5CF6] transition-all duration-300 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-purple-400 group-hover:via-pink-400 group-hover:to-purple-400 group-hover:scale-105 group-hover:drop-shadow-[0_0_15px_rgba(139,92,246,0.6)] relative will-change-transform transform-gpu whitespace-nowrap">
               {t.features.securityFutureSecrecy}
-              <span className="absolute inset-0 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-300 -z-10">{t.features.securityFutureSecrecy}</span>
+              <span className="absolute inset-0 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-300 -z-10 will-change-opacity transform-gpu">{t.features.securityFutureSecrecy}</span>
             </span>
-            <span className="text-gray-400 text-lg md:text-xl mx-2">—</span>
-            <span className="text-white text-base md:text-lg">{t.features.securityFutureSecrecyDesc}</span>
+            <span className="hidden md:inline text-gray-400 text-lg md:text-xl mx-2">—</span>
+            <span className="text-white text-sm md:text-lg opacity-90 leading-relaxed max-w-full md:max-w-none break-words">{t.features.securityFutureSecrecyDesc}</span>
           </div>
 
-          <div className="group flex items-center cursor-default py-4 border-b border-gray-700/50 hover:border-gray-600/50 transition-colors whitespace-nowrap gap-0">
-            <span className="text-xl md:text-2xl font-semibold text-[#8B5CF6] transition-all duration-300 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-purple-400 group-hover:via-pink-400 group-hover:to-purple-400 group-hover:scale-105 group-hover:drop-shadow-[0_0_15px_rgba(139,92,246,0.6)] relative">
+          <div className="group flex flex-col md:flex-row items-start md:items-center cursor-default py-4 md:py-5 border-b border-gray-700/50 hover:border-gray-600/50 transition-colors gap-2 md:gap-0">
+            <span className="text-xl md:text-2xl font-semibold text-[#8B5CF6] transition-all duration-300 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-purple-400 group-hover:via-pink-400 group-hover:to-purple-400 group-hover:scale-105 group-hover:drop-shadow-[0_0_15px_rgba(139,92,246,0.6)] relative will-change-transform transform-gpu whitespace-nowrap">
               {t.features.securityReplayProtection}
-              <span className="absolute inset-0 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-300 -z-10">{t.features.securityReplayProtection}</span>
+              <span className="absolute inset-0 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-300 -z-10 will-change-opacity transform-gpu">{t.features.securityReplayProtection}</span>
             </span>
-            <span className="text-gray-400 text-lg md:text-xl mx-2">—</span>
-            <span className="text-white text-base md:text-lg">{t.features.securityReplayProtectionDesc}</span>
+            <span className="hidden md:inline text-gray-400 text-lg md:text-xl mx-2">—</span>
+            <span className="text-white text-sm md:text-lg opacity-90 leading-relaxed max-w-full md:max-w-none break-words">{t.features.securityReplayProtectionDesc}</span>
           </div>
 
-          <div className="group flex items-center cursor-default py-4 border-b border-gray-700/50 hover:border-gray-600/50 transition-colors whitespace-nowrap gap-0">
-            <span className="text-xl md:text-2xl font-semibold text-[#8B5CF6] transition-all duration-300 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-purple-400 group-hover:via-pink-400 group-hover:to-purple-400 group-hover:scale-105 group-hover:drop-shadow-[0_0_15px_rgba(139,92,246,0.6)] relative">
+          <div className="group flex flex-col md:flex-row items-start md:items-center cursor-default py-4 md:py-5 border-b border-gray-700/50 hover:border-gray-600/50 transition-colors gap-2 md:gap-0">
+            <span className="text-xl md:text-2xl font-semibold text-[#8B5CF6] transition-all duration-300 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-purple-400 group-hover:via-pink-400 group-hover:to-purple-400 group-hover:scale-105 group-hover:drop-shadow-[0_0_15px_rgba(139,92,246,0.6)] relative will-change-transform transform-gpu whitespace-nowrap">
               {t.features.securityLocalEncryption}
-              <span className="absolute inset-0 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-300 -z-10">{t.features.securityLocalEncryption}</span>
+              <span className="absolute inset-0 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-300 -z-10 will-change-opacity transform-gpu">{t.features.securityLocalEncryption}</span>
             </span>
-            <span className="text-gray-400 text-lg md:text-xl mx-2">—</span>
-            <span className="text-white text-base md:text-lg">{t.features.securityLocalEncryptionDesc}</span>
+            <span className="hidden md:inline text-gray-400 text-lg md:text-xl mx-2">—</span>
+            <span className="text-white text-sm md:text-lg opacity-90 leading-relaxed max-w-full md:max-w-none break-words">{t.features.securityLocalEncryptionDesc}</span>
           </div>
         </div>
 

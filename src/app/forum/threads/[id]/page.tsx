@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Link from 'next/link';
+import { useAuth, useLanguage } from '@/context/LanguageContext';
 
 interface Thread {
   id: string;
@@ -41,12 +42,16 @@ export default function ThreadPage() {
   const [loading, setLoading] = useState(true);
   const [newPostContent, setNewPostContent] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  
+  const { isAuthenticated, user, token } = useAuth();
+  const { t } = useLanguage();
 
   useEffect(() => {
     if (!threadId) return;
 
     // Load thread
-    fetch(`${process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:8080/api/v1'}/forum/threads/${threadId}`)
+    fetch(`/api/v1/forum/threads/${threadId}`)
       .then(res => res.json())
       .then(data => {
         if (data.data) {
@@ -59,7 +64,7 @@ export default function ThreadPage() {
       });
 
     // Load posts
-    fetch(`${process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:8080/api/v1'}/forum/threads/${threadId}/posts`)
+    fetch(`/api/v1/forum/threads/${threadId}/posts`)
       .then(res => res.json())
       .then(data => {
         if (data.data && Array.isArray(data.data)) {
@@ -75,7 +80,7 @@ export default function ThreadPage() {
 
     setSubmitting(true);
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:8080/api/v1'}/forum/posts`, {
+      const response = await fetch(`/api/v1/forum/posts`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -89,7 +94,7 @@ export default function ThreadPage() {
       if (response.ok) {
         setNewPostContent('');
         // Reload posts
-        const postsResponse = await fetch(`${process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:8080/api/v1'}/forum/threads/${threadId}/posts`);
+        const postsResponse = await fetch(`/api/v1/forum/threads/${threadId}/posts`);
         const postsData = await postsResponse.json();
         if (postsData.data && Array.isArray(postsData.data)) {
           setPosts(postsData.data);
@@ -99,6 +104,29 @@ export default function ThreadPage() {
       console.error('Error submitting post:', error);
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const handleDeleteThread = async () => {
+    if (!confirm('Are you sure you want to delete this thread?')) return;
+    setIsDeleting(true);
+    try {
+      const response = await fetch(`/api/v1/forum/threads/${threadId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      if (response.ok) {
+        router.push('/forum');
+      } else {
+        alert('Failed to delete thread');
+        setIsDeleting(false);
+      }
+    } catch (error) {
+      console.error('Error deleting thread:', error);
+      alert('Failed to delete thread');
+      setIsDeleting(false);
     }
   };
 
@@ -164,6 +192,16 @@ export default function ThreadPage() {
                   Закрыто
                 </span>
               )}
+              
+              {isAuthenticated && user?.id === thread.user_id && (
+                <button
+                  onClick={handleDeleteThread}
+                  disabled={isDeleting}
+                  className="ml-auto px-3 py-1 bg-red-600/10 hover:bg-red-600/20 text-red-500 text-sm rounded border border-red-500/20 transition-colors"
+                >
+                  {isDeleting ? (t.forum_page?.confirming_delete || "Удаление...") : (t.forum_page?.delete_thread || "Удалить тред")}
+                </button>
+              )}
             </div>
             <h1 className="text-3xl font-bold text-white mb-4">{thread.title}</h1>
             <div className="text-gray-400 text-sm mb-4 whitespace-pre-wrap">{thread.content}</div>
@@ -221,6 +259,8 @@ export default function ThreadPage() {
                 <textarea
                   value={newPostContent}
                   onChange={(e) => setNewPostContent(e.target.value)}
+                  onInvalid={(e) => (e.target as HTMLTextAreaElement).setCustomValidity(t.common?.required_field || 'Required')}
+                  onInput={(e) => (e.target as HTMLTextAreaElement).setCustomValidity('')}
                   placeholder="Напишите ваш ответ..."
                   className="w-full bg-[#0F0C16] border border-white/10 rounded-lg p-4 text-white placeholder-gray-500 focus:border-purple-500/50 focus:outline-none resize-none"
                   rows={6}

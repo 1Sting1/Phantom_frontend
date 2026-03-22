@@ -98,6 +98,13 @@ export const en: Translations = {
     },
     auth: {
         email: 'E-mail',
+        nickname: 'Nickname',
+        nicknameAvailable: 'Available',
+        checking: 'Checking...',
+        passwordStrength: 'Strength: ',
+        strengthWeak: 'Weak',
+        strengthMedium: 'Medium',
+        strengthStrong: 'Strong',
         password: 'Password',
         passwordRepeat: 'Repeat Password',
         loginBtn: 'Login',
@@ -149,8 +156,13 @@ export const en: Translations = {
         category_names: {
             general: 'General',
             news: 'News',
-            guides: 'Guides & Tutorials'
-        }
+            guides: 'Guides & Tutorials',
+            installation: 'Installation & Setup',
+            features: 'Feature Requests',
+            development: 'Development'
+        },
+        delete_thread: 'Delete thread',
+        confirming_delete: 'Deleting...'
     },
     docs_page: {
         title: 'Documentation',
@@ -165,5 +177,6 @@ export const en: Translations = {
     common: {
         loading: 'Loading...',
         menu: 'Menu',
+        required_field: 'Please fill out this field.',
     }
 };

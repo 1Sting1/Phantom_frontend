@@ -27,14 +27,14 @@ const Hero = () => {
 
       {/* Background Animated Blobs */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none -z-10">
-        <div className="absolute top-20 left-20 w-72 h-72 bg-purple-600 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
-        <div className="absolute top-20 right-20 w-72 h-72 bg-blue-600 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
-        <div className="absolute -bottom-32 left-1/2 w-72 h-72 bg-pink-600 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
+        <div className="absolute top-20 left-20 w-72 h-72 bg-purple-600/20 rounded-full blur-xl animate-blob will-change-transform transform-gpu"></div>
+        <div className="absolute top-20 right-20 w-72 h-72 bg-blue-600/20 rounded-full blur-xl animate-blob animation-delay-2000 will-change-transform transform-gpu"></div>
+        <div className="absolute -bottom-32 left-1/2 w-72 h-72 bg-pink-600/20 rounded-full blur-xl animate-blob animation-delay-4000 will-change-transform transform-gpu"></div>
 
         {/* Additional Floating Orbs */}
-        <div className="absolute top-1/3 right-1/4 w-48 h-48 bg-cyan-500/20 rounded-full mix-blend-multiply filter blur-2xl opacity-15 animate-orb-float"></div>
-        <div className="absolute bottom-1/4 left-1/3 w-56 h-56 bg-indigo-500/20 rounded-full mix-blend-multiply filter blur-2xl opacity-15 animate-orb-float animation-delay-2000"></div>
-        <div className="absolute top-1/2 left-1/4 w-40 h-40 bg-violet-500/20 rounded-full mix-blend-multiply filter blur-2xl opacity-15 animate-orb-float animation-delay-4000"></div>
+        <div className="absolute top-1/3 right-1/4 w-48 h-48 bg-cyan-500/15 rounded-full blur-2xl animate-orb-float justify-between will-change-transform transform-gpu"></div>
+        <div className="absolute bottom-1/4 left-1/3 w-56 h-56 bg-indigo-500/15 rounded-full blur-2xl animate-orb-float animation-delay-2000 will-change-transform transform-gpu"></div>
+        <div className="absolute top-1/2 left-1/4 w-40 h-40 bg-violet-500/15 rounded-full blur-2xl animate-orb-float animation-delay-4000 will-change-transform transform-gpu"></div>
       </div>
 
       {/* Floating Particles/Sparkles */}
@@ -65,8 +65,8 @@ const Hero = () => {
 
       {/* Animated Gradient Orbs */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none -z-10">
-        <div className="absolute top-10 right-10 w-96 h-96 bg-gradient-to-br from-purple-500/10 via-blue-500/10 to-pink-500/10 rounded-full filter blur-3xl animate-glow-pulse"></div>
-        <div className="absolute bottom-10 left-10 w-96 h-96 bg-gradient-to-tr from-cyan-500/10 via-indigo-500/10 to-purple-500/10 rounded-full filter blur-3xl animate-glow-pulse animation-delay-2000"></div>
+        <div className="absolute top-10 right-10 w-96 h-96 bg-gradient-to-br from-purple-500/10 via-blue-500/10 to-pink-500/10 rounded-full blur-3xl animate-glow-pulse will-change-transform transform-gpu"></div>
+        <div className="absolute bottom-10 left-10 w-96 h-96 bg-gradient-to-tr from-cyan-500/10 via-indigo-500/10 to-purple-500/10 rounded-full blur-3xl animate-glow-pulse animation-delay-2000 will-change-transform transform-gpu"></div>
       </div>
 
       {/* Floating Security Icons Around Text */}
@@ -150,7 +150,7 @@ const Hero = () => {
           </svg>
 
           {/* Animated Glow Behind Text */}
-          <div className="absolute -inset-4 bg-gradient-to-r from-purple-600/20 via-blue-600/20 to-pink-600/20 blur-2xl -z-10 animate-pulse-scale"></div>
+          <div className="absolute -inset-4 bg-gradient-to-r from-purple-600/20 via-blue-600/20 to-pink-600/20 blur-2xl -z-10 animate-pulse-scale will-change-transform transform-gpu"></div>
 
           {/* Floating Crypto Icons */}
           <div className="absolute -right-12 top-1/2 -translate-y-1/2 animate-float-icon hidden lg:block" style={{ animationDelay: '1s' }}>
@@ -206,7 +206,7 @@ const Hero = () => {
       <div className="relative flex justify-center items-center animate-slide-in-right order-2 w-full mt-12 lg:mt-0" style={{ animationDelay: '0.3s', opacity: 0, zIndex: 10 }}>
 
         {/* Background Purple Glow (Behind Card) */}
-        <div className="absolute top-1/2 right-0 w-full max-w-[500px] h-full max-h-[500px] bg-purple-600/30 blur-[120px] rounded-full pointer-events-none" style={{ zIndex: 1, left: '50%', transform: 'translate(-50%, -50%)' }}></div>
+        <div className="absolute top-1/2 right-0 w-full max-w-[500px] h-full max-h-[500px] bg-purple-600/30 blur-[120px] rounded-full pointer-events-none transform-gpu" style={{ zIndex: 1, left: '50%', transform: 'translate(-50%, -50%)' }}></div>
 
         {/* Floating Security Elements Around Card */}
         <div className="absolute inset-0 overflow-visible pointer-events-none hidden sm:block" style={{ zIndex: 8 }}>
@@ -316,9 +316,9 @@ const Hero = () => {
           {/* 3D Ghost Image with Enhanced Float Animation - Only on Hover */}
           <div className="relative -mb-20 mt-4 ghost-container group" style={{ animationDelay: '0.7s', zIndex: 10 }}>
             {/* Glow Orbs Around Ghost - Animate on Hover */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-purple-500/20 rounded-full blur-3xl transition-all duration-1000 group-hover:animate-glow-wave"></div>
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-blue-500/20 rounded-full blur-2xl transition-all duration-1000 group-hover:animate-glow-wave" style={{ animationDelay: '2s' }}></div>
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200px] h-[200px] bg-pink-500/15 rounded-full blur-xl transition-all duration-1000 group-hover:animate-glow-wave" style={{ animationDelay: '4s' }}></div>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-purple-500/20 rounded-full blur-3xl transition-all duration-1000 group-hover:animate-glow-wave will-change-transform transform-gpu"></div>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-blue-500/20 rounded-full blur-2xl transition-all duration-1000 group-hover:animate-glow-wave transform-gpu" style={{ animationDelay: '2s' }}></div>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200px] h-[200px] bg-pink-500/15 rounded-full blur-xl transition-all duration-1000 group-hover:animate-glow-wave transform-gpu" style={{ animationDelay: '4s' }}></div>
 
             {/* Rotating Rings with Smooth Animation - Animate on Hover */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[360px] h-[360px] border border-purple-500/10 rounded-full transition-all duration-1000 group-hover:animate-smooth-rotate"></div>
