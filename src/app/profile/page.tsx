@@ -191,7 +191,7 @@ export default function ProfilePage() {
                   type="text"
                   value={editName}
                   onChange={(e) => setEditName(e.target.value)}
-                  className="w-full bg-[#252330] border border-transparent focus:border-purple-500/50 rounded-xl px-4 py-3 text-white outline-none transition-colors text-center text-[22px] font-medium"
+                  className="w-full bg-[#252330] border border-white/10 hover:border-white/20 focus:border-purple-500 focus:bg-[#2A2738] focus:ring-2 focus:ring-purple-500/40 focus:shadow-[0_0_16px_rgba(168,85,247,0.25)] rounded-xl px-4 py-3 text-white outline-none transition-colors text-center text-[22px] font-medium"
                   placeholder="Nickname"
                   maxLength={30}
                   autoFocus

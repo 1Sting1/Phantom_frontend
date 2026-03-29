@@ -118,7 +118,7 @@ export default function NewThreadPage() {
                 onChange={(e) => setTitle(e.target.value)}
                 onInvalid={(e) => (e.target as HTMLInputElement).setCustomValidity(t.common?.required_field || 'Required')}
                 onInput={(e) => (e.target as HTMLInputElement).setCustomValidity('')}
-                className="w-full bg-[#252330] border border-transparent focus:border-purple-500/50 rounded-xl px-4 py-3.5 text-white outline-none transition-colors"
+                className="w-full bg-[#252330] border border-white/10 hover:border-white/20 focus:border-purple-500 focus:bg-[#2A2738] focus:ring-2 focus:ring-purple-500/40 focus:shadow-[0_0_16px_rgba(168,85,247,0.25)] rounded-xl px-4 py-3.5 text-white outline-none transition-colors"
                 required
               />
             </div>
@@ -130,7 +130,7 @@ export default function NewThreadPage() {
                 onChange={(e) => setCategoryId(e.target.value)}
                 onInvalid={(e) => (e.target as HTMLSelectElement).setCustomValidity(t.common?.required_field || 'Required')}
                 onInput={(e) => (e.target as HTMLSelectElement).setCustomValidity('')}
-                className="w-full bg-[#252330] border border-transparent focus:border-purple-500/50 rounded-xl px-4 py-3.5 text-white outline-none transition-colors"
+                className="w-full bg-[#252330] border border-white/10 hover:border-white/20 focus:border-purple-500 focus:bg-[#2A2738] focus:ring-2 focus:ring-purple-500/40 focus:shadow-[0_0_16px_rgba(168,85,247,0.25)] rounded-xl px-4 py-3.5 text-white outline-none transition-colors"
                 required
               >
                 <option value="" disabled>{t.forum_page.select_category}</option>
@@ -153,7 +153,7 @@ export default function NewThreadPage() {
                 onInvalid={(e) => (e.target as HTMLTextAreaElement).setCustomValidity(t.common?.required_field || 'Required')}
                 onInput={(e) => (e.target as HTMLTextAreaElement).setCustomValidity('')}
                 rows={8}
-                className="w-full bg-[#252330] border border-transparent focus:border-purple-500/50 rounded-xl px-4 py-3.5 text-white outline-none transition-colors resize-y"
+                className="w-full bg-[#252330] border border-white/10 hover:border-white/20 focus:border-purple-500 focus:bg-[#2A2738] focus:ring-2 focus:ring-purple-500/40 focus:shadow-[0_0_16px_rgba(168,85,247,0.25)] rounded-xl px-4 py-3.5 text-white outline-none transition-colors resize-y"
                 required
               />
             </div>

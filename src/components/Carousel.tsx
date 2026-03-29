@@ -218,33 +218,33 @@ const Carousel = () => {
 
                           {/* SCENARIO 2: Mobile Only (Slide 2) */}
                           {slideType === 'mobile-only' && (
-                            <div className="relative z-20 h-full flex justify-start pt-6 sm:pt-0 sm:justify-center items-start sm:items-center transform scale-[0.75] sm:scale-95 md:scale-100 lg:scale-110 pb-8 md:pb-0">
-                              <div className="relative w-[340px] h-[700px] bg-[#0A0A0A] rounded-[50px] border-[8px] border-[#1a1a1a] shadow-2xl overflow-hidden transition-all duration-500 ease-out hover:scale-[1.03] hover:shadow-[0_20px_60px_rgba(0,0,0,0.6)]">
+                            <div className="relative z-20 h-full flex justify-start pt-6 sm:pt-0 sm:justify-center items-start sm:items-center transform scale-[0.70] sm:scale-[0.80] md:scale-100 pb-8 md:pb-0">
+                              <div className="relative w-[320px] h-[650px] bg-[#0A0A0A] rounded-[45px] border-[6px] border-[#1a1a1a] shadow-2xl overflow-hidden transition-all duration-500 ease-out hover:scale-[1.03] hover:shadow-[0_20px_60px_rgba(0,0,0,0.6)]">
                                 {/* Notch & Status Bar */}
-                                <div className="absolute top-0 inset-x-0 h-8 z-30 flex justify-between px-6 items-center pt-3">
+                                <div className="absolute top-0 inset-x-0 h-8 z-30 flex justify-between px-6 items-center pt-2">
                                   <span className="text-white text-xs font-medium">9:41</span>
-                                  <div className="w-20 h-6 bg-black rounded-b-xl absolute left-1/2 -translate-x-1/2 top-0"></div>
+                                  <div className="w-16 h-5 bg-black rounded-b-xl absolute left-1/2 -translate-x-1/2 top-0"></div>
                                   <div className="w-4 h-2.5 border border-white/60 rounded-[2px] relative"><div className="absolute inset-0.5 bg-white rounded-[1px]"></div></div>
                                 </div>
 
                                 {/* Content */}
-                                <div className="flex flex-col items-center pt-24 px-5 h-full bg-gradient-to-b from-[#13111A] to-[#0F0C16]">
-                                  {/* Larger Logo */}
-                                  <div className="relative w-24 h-24 mb-10">
+                                <div className="flex flex-col items-center pt-20 px-4 h-full bg-gradient-to-b from-[#13111A] to-[#0F0C16]">
+                                  {/* Logo */}
+                                  <div className="relative w-16 h-16 mb-8">
                                     <Image
                                       src="/phantom-ghost.png"
                                       alt="Phantom Logo"
                                       fill
-                                      className="object-contain drop-shadow-[0_0_20px_rgba(139,92,246,0.7)]"
+                                      className="object-contain drop-shadow-[0_0_15px_rgba(139,92,246,0.6)]"
                                     />
                                   </div>
 
-                                  <div className="w-full space-y-4">
+                                  <div className="w-full space-y-3">
                                     <ChatListItems compact />
                                   </div>
 
                                   {/* Home Indicator */}
-                                  <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-white/20 rounded-full"></div>
+                                  <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1 bg-white/20 rounded-full"></div>
                                 </div>
                               </div>
                             </div>

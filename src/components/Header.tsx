@@ -311,14 +311,14 @@ const Header = () => {
       </div>
 
       {/* Mobile Menu */}
-      <div className={`lg:hidden fixed inset-0 z-40 transition-all duration-300 ${mobileMenuOpen ? 'visible' : 'invisible'}`}>
+      <div className={`lg:hidden fixed inset-0 z-[100] transition-all duration-300 ${mobileMenuOpen ? 'visible' : 'invisible'}`}>
         <div
           className={`absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ${mobileMenuOpen ? 'opacity-100' : 'opacity-0'}`}
           onClick={() => setMobileMenuOpen(false)}
         ></div>
         <div className={`absolute top-0 right-0 h-full w-[280px] sm:w-[320px] border-l border-purple-500/30 shadow-2xl transition-transform duration-300 overflow-hidden ${mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
           <div className="absolute inset-0 bg-gradient-to-br from-[#1a0f2e] via-[#0F0C16] to-[#0a0514]"></div>
-          <div className="relative h-full flex flex-col z-10 pt-28 overflow-y-auto">
+          <div className="relative h-full flex flex-col z-10 pt-8 overflow-y-auto">
             <div className="px-6 pb-4 border-b border-white/10 flex justify-between items-center">
               <span className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-purple-400">{t.common?.menu || 'Menu'}</span>
               <button onClick={() => setMobileMenuOpen(false)} className="text-gray-400 hover:text-white p-2">

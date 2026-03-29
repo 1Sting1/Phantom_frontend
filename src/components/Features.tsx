@@ -5,18 +5,18 @@ import { useLanguage } from '@/context/LanguageContext';
 
 const FeatureCard = ({ title, description, footerText }: { title: string, description: string, footerText: string }) => {
   return (
-    <div className="group relative bg-[#13111A] border border-white/10 hover:border-purple-500/50 p-6 sm:p-8 rounded-2xl transition-all duration-300 flex flex-col min-h-[280px] sm:min-h-[320px] overflow-hidden hover:shadow-[0_0_30px_rgba(139,92,246,0.1)] hover:-translate-y-1 w-full max-w-sm">
+    <div className="group relative bg-[#13111A] border border-white/20 hover:border-purple-500/60 p-6 sm:p-8 rounded-2xl transition-all duration-300 flex flex-col min-h-[280px] sm:min-h-[320px] overflow-hidden hover:shadow-[0_0_30px_rgba(139,92,246,0.15)] hover:-translate-y-1 w-full max-w-sm">
       {/* Grid Pattern Background */}
       <div className="absolute inset-0 bg-grid-pattern opacity-[0.03] pointer-events-none group-hover:opacity-[0.06] transition-opacity"></div>
 
       <div className="relative z-10 flex flex-col flex-grow">
-        <h3 className="text-xl sm:text-2xl font-bold text-[#8B5CF6] mb-4 sm:mb-6 leading-tight whitespace-pre-line">{title.replace(/\\n/g, '\n')}</h3>
-        <p className="text-gray-400 text-xs sm:text-sm leading-relaxed mb-auto flex-grow">{description}</p>
+        <h3 className="text-xl sm:text-2xl font-bold text-[#A78BFA] group-hover:text-[#C084FC] transition-colors mb-4 sm:mb-6 leading-tight whitespace-pre-line">{title.replace(/\\n/g, '\n')}</h3>
+        <p className="text-gray-200 text-sm sm:text-base leading-relaxed mb-auto flex-grow drop-shadow-sm">{description}</p>
       </div>
 
-      <div className="relative z-10 flex items-center gap-2 mt-8">
-        <span className="text-gray-500 text-xs">{footerText}</span>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-500">
+      <div className="relative z-10 flex items-center gap-2 mt-8 opacity-80 group-hover:opacity-100 transition-opacity">
+        <span className="text-gray-300 text-sm font-medium uppercase tracking-wider">{footerText}</span>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-purple-400/80 group-hover:text-purple-400 transition-colors">
           <circle cx="12" cy="12" r="10" />
           <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
           <path d="M12 17h.01" />
@@ -102,7 +102,7 @@ const Features = () => {
             <p className="text-gray-400">{t.features.loading}</p>
           </div>
         ) : (
-          <div className="flex flex-wrap justify-center items-start gap-6">
+          <div className="flex flex-wrap justify-center items-stretch gap-6">
             {featuresData.map((feature) => (
               <FeatureCard
                 key={feature.id}
