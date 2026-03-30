@@ -43,9 +43,33 @@ export default function ThreadPage() {
   const [newPostContent, setNewPostContent] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [userProfiles, setUserProfiles] = useState<Record<string, { display_name: string }>>({});
+  
+  // Inline replies state
+  const [replyingTo, setReplyingTo] = useState<string | null>(null);
+  const [replyContent, setReplyContent] = useState('');
+  const [submittingReply, setSubmittingReply] = useState(false);
+  
+  // Post deletion tracking
+  const [deletingPostId, setDeletingPostId] = useState<string | null>(null);
+
+  // Custom confirm modal
+  const [confirmModal, setConfirmModal] = useState<{
+    open: boolean;
+    message: string;
+    onConfirm: () => void;
+  }>({ open: false, message: '', onConfirm: () => {} });
   
   const { isAuthenticated, user, token } = useAuth();
   const { t } = useLanguage();
+
+  const showConfirm = (message: string, onConfirm: () => void) => {
+    setConfirmModal({ open: true, message, onConfirm });
+  };
+
+  const closeConfirm = () => {
+    setConfirmModal(prev => ({ ...prev, open: false }));
+  };
 
   useEffect(() => {
     if (!threadId) return;
@@ -74,6 +98,27 @@ export default function ThreadPage() {
       .catch(() => {});
   }, [threadId]);
 
+  useEffect(() => {
+    // Resolve user IDs to Nicknames
+    const userIds = new Set<string>();
+    if (thread) userIds.add(thread.user_id);
+    posts.forEach(p => userIds.add(p.user_id));
+    
+    const idsToFetch = Array.from(userIds).filter(id => !userProfiles[id]);
+    if (idsToFetch.length === 0) return;
+
+    idsToFetch.forEach(id => {
+      fetch(`/api/v1/public/user/profile/${id}`)
+        .then(res => res.ok ? res.json() : null)
+        .then(data => {
+          if (data && data.data && data.data.display_name) {
+            setUserProfiles(prev => ({ ...prev, [id]: data.data }));
+          }
+        })
+        .catch(() => {});
+    });
+  }, [thread, posts]);
+
   const handleSubmitPost = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newPostContent.trim() || !threadId) return;
@@ -84,6 +129,7 @@ export default function ThreadPage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
         },
         body: JSON.stringify({
           thread_id: threadId,
@@ -107,8 +153,50 @@ export default function ThreadPage() {
     }
   };
 
-  const handleDeleteThread = async () => {
-    if (!confirm('Are you sure you want to delete this thread?')) return;
+  const handleSubmitReply = async (e: React.FormEvent, parentId: string) => {
+    e.preventDefault();
+    if (!replyContent.trim() || !threadId) return;
+
+    setSubmittingReply(true);
+    try {
+      const response = await fetch(`/api/v1/forum/posts`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+        },
+        body: JSON.stringify({
+          thread_id: threadId,
+          parent_post_id: parentId,
+          content: replyContent,
+        }),
+      });
+
+      if (response.ok) {
+        setReplyContent('');
+        setReplyingTo(null);
+        // Reload posts
+        const postsResponse = await fetch(`/api/v1/forum/threads/${threadId}/posts`);
+        const postsData = await postsResponse.json();
+        if (postsData.data && Array.isArray(postsData.data)) {
+          setPosts(postsData.data);
+        }
+      }
+    } catch (error) {
+      console.error('Error submitting reply:', error);
+    } finally {
+      setSubmittingReply(false);
+    }
+  };
+
+  const handleDeleteThread = () => {
+    showConfirm(
+      'Вы уверены, что хотите удалить этот тред? Это действие нельзя отменить.',
+      () => doDeleteThread()
+    );
+  };
+
+  const doDeleteThread = async () => {
     setIsDeleting(true);
     try {
       const response = await fetch(`/api/v1/forum/threads/${threadId}`, {
@@ -127,6 +215,40 @@ export default function ThreadPage() {
       console.error('Error deleting thread:', error);
       alert('Failed to delete thread');
       setIsDeleting(false);
+    }
+  };
+
+  const handleDeletePost = (postId: string) => {
+    showConfirm(
+      t.forum_page?.confirm_delete_post || 'Вы уверены, что хотите удалить этот комментарий?',
+      () => doDeletePost(postId)
+    );
+  };
+
+  const doDeletePost = async (postId: string) => {
+    setDeletingPostId(postId);
+    try {
+      const response = await fetch(`/api/v1/forum/posts/${postId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      if (response.ok) {
+        // Soft reload the posts list
+        const postsResponse = await fetch(`/api/v1/forum/threads/${threadId}/posts`);
+        const postsData = await postsResponse.json();
+        if (postsData.data && Array.isArray(postsData.data)) {
+          setPosts(postsData.data);
+        }
+      } else {
+        alert('Failed to delete comment');
+      }
+    } catch (error) {
+      console.error('Error deleting comment:', error);
+      alert('Failed to delete comment');
+    } finally {
+      setDeletingPostId(null);
     }
   };
 
@@ -173,15 +295,65 @@ export default function ThreadPage() {
   return (
     <main className="flex min-h-screen flex-col bg-[#050505]">
       <Header />
-      <div className="flex-1 px-12 lg:px-24 xl:px-32 2xl:px-40 py-20">
-        <div className="max-w-4xl mx-auto">
-          <Link href="/forum" className="text-purple-400 hover:text-purple-300 mb-4 inline-block">
-            ← Вернуться к форуму
+
+      {/* Custom Confirm Modal */}
+      {confirmModal.open && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4" role="dialog" aria-modal>
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+            onClick={closeConfirm}
+          />
+          {/* Modal */}
+          <div className="relative z-10 w-full max-w-md animate-in fade-in zoom-in-95 duration-200">
+            <div className="bg-gradient-to-b from-[#1A1726] to-[#100E1A] border border-white/10 shadow-[0_0_60px_rgba(168,85,247,0.2)] rounded-3xl p-8">
+              {/* Icon */}
+              <div className="flex justify-center mb-6">
+                <div className="w-16 h-16 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center shadow-[0_0_20px_rgba(239,68,68,0.15)]">
+                  <svg className="w-8 h-8 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+                  </svg>
+                </div>
+              </div>
+              {/* Message */}
+              <p className="text-center text-gray-200 text-base leading-relaxed mb-8 font-medium">
+                {confirmModal.message}
+              </p>
+              {/* Buttons */}
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={closeConfirm}
+                  className="flex-1 px-5 py-3 rounded-xl font-semibold text-sm text-gray-300 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all active:scale-95"
+                >
+                  Отмена
+                </button>
+                <button
+                  onClick={() => { confirmModal.onConfirm(); closeConfirm(); }}
+                  className="flex-1 px-5 py-3 rounded-xl font-semibold text-sm text-white bg-red-600 hover:bg-red-500 border border-red-500/50 shadow-[0_4px_20px_rgba(239,68,68,0.3)] hover:shadow-[0_4px_20px_rgba(239,68,68,0.5)] transition-all active:scale-95"
+                >
+                  Удалить
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      <div className="flex-1 px-4 sm:px-12 lg:px-24 xl:px-32 2xl:px-40 py-16 sm:py-24 relative overflow-hidden">
+        {/* Background ambient glows */}
+        <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-600/10 blur-[150px] rounded-full mix-blend-screen pointer-events-none"></div>
+        <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600/10 blur-[120px] rounded-full mix-blend-screen pointer-events-none"></div>
+        
+        <div className="max-w-4xl mx-auto relative z-10">
+          <Link href="/forum" className="group flex items-center gap-2 text-purple-400 hover:text-purple-300 mb-8 inline-flex transition-colors font-medium">
+            <svg className="w-4 h-4 transition-transform group-hover:-translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+            Вернуться к форуму
           </Link>
 
           {/* Thread Header */}
-          <div className="bg-[#13111A] border border-white/10 rounded-2xl p-6 mb-6">
-            <div className="flex items-center gap-3 mb-4">
+          <div className="bg-gradient-to-b from-[#13111A]/80 to-[#0A0810]/80 border border-white/5 shadow-2xl backdrop-blur-xl rounded-3xl p-6 sm:p-10 mb-8 relative overflow-hidden">
+            <div className="absolute -top-20 -right-20 w-64 h-64 bg-purple-500/5 blur-[50px] rounded-full pointer-events-none"></div>
+            
+            <div className="flex items-center gap-3 mb-6">
               {thread.is_pinned && (
                 <span className="px-2 py-1 bg-yellow-500/20 text-yellow-400 text-xs rounded border border-yellow-500/30">
                   Закреплено
@@ -197,79 +369,184 @@ export default function ThreadPage() {
                 <button
                   onClick={handleDeleteThread}
                   disabled={isDeleting}
-                  className="ml-auto px-3 py-1 bg-red-600/10 hover:bg-red-600/20 text-red-500 text-sm rounded border border-red-500/20 transition-colors"
+                  className="ml-auto px-4 py-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-500 text-xs font-semibold rounded-lg border border-red-500/20 transition-all shadow-[0_0_10px_rgba(239,68,68,0.05)] active:scale-95"
                 >
                   {isDeleting ? (t.forum_page?.confirming_delete || "Удаление...") : (t.forum_page?.delete_thread || "Удалить тред")}
                 </button>
               )}
             </div>
-            <h1 className="text-3xl font-bold text-white mb-4">{thread.title}</h1>
-            <div className="text-gray-400 text-sm mb-4 whitespace-pre-wrap">{thread.content}</div>
-            <div className="flex items-center gap-4 text-xs text-gray-500 pt-4 border-t border-white/5">
-              <span>Автор: {thread.user_id.substring(0, 8)}...</span>
-              <span>Просмотров: {thread.views_count}</span>
-              <span>{formatDate(thread.created_at)}</span>
+            <h1 className="text-3xl sm:text-4xl font-black text-white mb-6 drop-shadow-sm leading-tight">{thread.title}</h1>
+            <div className="text-gray-300 text-[15px] sm:text-base leading-relaxed mb-8 whitespace-pre-wrap selection:bg-purple-500/30">{thread.content}</div>
+            
+            <div className="flex flex-wrap items-center gap-4 text-xs font-medium text-gray-500 pt-6 border-t border-white/5">
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded-full bg-gradient-to-br from-purple-500/20 to-blue-500/20 border border-white/10 flex items-center justify-center text-purple-300">
+                  {(userProfiles[thread.user_id]?.display_name || thread.user_id).substring(0, 2).toUpperCase()}
+                </div>
+                <span className="text-gray-300">{userProfiles[thread.user_id]?.display_name || thread.user_id.substring(0, 16)}</span>
+              </div>
+              <span className="flex items-center gap-1.5 bg-white/5 px-3 py-1.5 rounded-lg">
+                <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                {thread.views_count}
+              </span>
+              <span className="flex items-center gap-1.5 bg-white/5 px-3 py-1.5 rounded-lg">
+                <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                {formatDate(thread.created_at)}
+              </span>
             </div>
           </div>
 
           {/* Posts */}
-          <div className="space-y-4 mb-6">
-            <h2 className="text-xl font-bold text-white mb-4">
-              Ответы ({posts.length})
+          <div className="space-y-6 mb-8">
+            <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+              Ответы
+              <span className="text-sm font-semibold px-3 py-1 bg-white/5 text-gray-400 rounded-full border border-white/10">
+                {posts.length}
+              </span>
             </h2>
             {posts.length === 0 ? (
-              <div className="text-center py-12 bg-[#13111A] border border-white/10 rounded-2xl">
+              <div className="text-center py-16 bg-gradient-to-b from-[#13111A]/50 to-[#0A0810]/50 border border-white/5 rounded-3xl">
+                <svg className="w-12 h-12 text-white/10 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
                 <p className="text-gray-400">Пока нет ответов. Будьте первым!</p>
               </div>
             ) : (
-              posts.map((post) => (
-                <div
-                  key={post.id}
-                  className="bg-[#13111A] border border-white/10 rounded-xl p-6"
-                >
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center">
-                        <span className="text-purple-400 text-sm font-medium">
-                          {post.user_id.substring(0, 2).toUpperCase()}
-                        </span>
-                      </div>
-                      <div>
-                        <div className="text-white font-medium text-sm">
-                          {post.user_id.substring(0, 8)}...
+              posts.filter(p => !p.parent_post_id).map((topLevelPost) => {
+                
+                const renderPost = (post: Post, depth: number = 0) => {
+                  const replies = posts.filter(p => p.parent_post_id === post.id);
+                  const isReplying = replyingTo === post.id;
+                  
+                  return (
+                    <div
+                      key={post.id}
+                      className={`group ${
+                        depth === 0 
+                          ? "bg-[#181622]/50 border border-white/5 rounded-3xl p-6 sm:p-8 hover:bg-[#1C1A28]/80 transition-all duration-300 relative overflow-hidden" 
+                          : "mt-4 ml-3 sm:ml-8 pl-4 sm:pl-6 border-l-2 border-purple-500/20 relative"
+                      }`}
+                    >
+                      
+                      <div className="flex items-start justify-between mb-4 relative z-10">
+                        <div className="flex items-center gap-3">
+                          <div className={`rounded-full bg-gradient-to-br from-purple-500/20 to-blue-500/20 flex items-center justify-center border border-white/10 shadow-[0_0_15px_rgba(168,85,247,0.15)] ${depth === 0 ? 'w-10 h-10' : 'w-8 h-8'}`}>
+                            <span className={`text-purple-300 font-semibold uppercase ${depth === 0 ? 'text-sm' : 'text-xs'}`}>
+                              {(userProfiles[post.user_id]?.display_name || post.user_id).substring(0, 2)}
+                            </span>
+                          </div>
+                          <div>
+                            <div className="text-gray-200 font-semibold text-sm">
+                              {userProfiles[post.user_id]?.display_name || post.user_id.substring(0, 16)}
+                            </div>
+                            <div className="text-gray-500 text-[11px] sm:text-xs flex items-center gap-2 mt-0.5">
+                              <span>{formatDate(post.created_at)}</span>
+                              {post.is_edited && <span className="bg-white/5 px-1.5 py-0.5 rounded text-[10px]">(ред.)</span>}
+                            </div>
+                          </div>
                         </div>
-                        <div className="text-gray-500 text-xs">
-                          {formatDate(post.created_at)}
-                          {post.is_edited && ' (отредактировано)'}
+                        
+                        <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity duration-300">
+                          {!thread.is_locked && (
+                            <button
+                              onClick={() => {
+                                setReplyingTo(replyingTo === post.id ? null : post.id);
+                                setReplyContent('');
+                              }}
+                              className={`text-xs font-medium px-3 py-1.5 rounded-lg transition-all active:scale-95 ${
+                                isReplying 
+                                  ? 'bg-white/10 text-white hover:bg-white/20' 
+                                  : 'text-purple-400 hover:text-purple-300 bg-purple-500/10 hover:bg-purple-500/20'
+                              }`}
+                            >
+                              {isReplying ? 'Отмена' : 'Ответить'}
+                            </button>
+                          )}
+                          
+                          {isAuthenticated && user?.id === post.user_id && (
+                            <button
+                              onClick={() => handleDeletePost(post.id)}
+                              disabled={deletingPostId === post.id}
+                              className="text-xs font-medium text-red-400 hover:text-red-300 bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition-all active:scale-95 disabled:opacity-50"
+                            >
+                              {deletingPostId === post.id ? '...' : 'Удалить'}
+                            </button>
+                          )}
                         </div>
                       </div>
+                      
+                      <div className="text-gray-300 whitespace-pre-wrap text-[15px] leading-relaxed mb-3 relative z-10 selection:bg-purple-500/30">
+                        {post.content}
+                      </div>
+
+                      {/* Inline Reply Form */}
+                      {isReplying && !thread.is_locked && (
+                        <div className="mt-4 mb-4 animate-in fade-in slide-in-from-top-2 duration-300 relative z-10 border-l-2 border-purple-500 pl-4">
+                          <form onSubmit={(e) => handleSubmitReply(e, post.id)}>
+                            <textarea
+                              value={replyContent}
+                              onChange={(e) => setReplyContent(e.target.value)}
+                              placeholder={`Ответить ${userProfiles[post.user_id]?.display_name || 'пользователю'}...`}
+                              className="w-full bg-[#0a0810] border border-white/10 rounded-xl p-4 text-white text-sm placeholder-gray-600 focus:border-purple-500 focus:ring-1 focus:ring-purple-500/50 outline-none resize-y transition-all"
+                              rows={3}
+                              autoFocus
+                              required
+                            />
+                            <div className="flex justify-end gap-3 mt-3">
+                              <button
+                                type="button"
+                                onClick={() => setReplyingTo(null)}
+                                className="px-5 py-2 text-xs font-semibold text-gray-400 hover:text-white bg-white/5 hover:bg-white/10 rounded-lg transition-colors active:scale-95"
+                              >
+                                Отмена
+                              </button>
+                              <button
+                                type="submit"
+                                disabled={submittingReply || !replyContent.trim()}
+                                className="px-5 py-2 text-xs bg-purple-600 hover:bg-purple-500 disabled:bg-purple-600/50 text-white rounded-lg transition-all font-semibold active:scale-95 shadow-[0_0_15px_rgba(168,85,247,0.3)] disabled:shadow-none"
+                              >
+                                {submittingReply ? 'Отправка...' : 'Ответить'}
+                              </button>
+                            </div>
+                          </form>
+                        </div>
+                      )}
+
+                      {/* Recursive Children Replies */}
+                      {replies.length > 0 && (
+                        <div className="mt-2">
+                          {replies.map(r => renderPost(r, depth + 1))}
+                        </div>
+                      )}
                     </div>
-                  </div>
-                  <div className="text-gray-300 whitespace-pre-wrap">{post.content}</div>
-                </div>
-              ))
+                  );
+                };
+
+                return renderPost(topLevelPost, 0);
+              })
             )}
           </div>
 
           {/* Reply Form */}
           {!thread.is_locked && (
-            <div className="bg-[#13111A] border border-white/10 rounded-2xl p-6">
-              <h3 className="text-lg font-bold text-white mb-4">Добавить ответ</h3>
-              <form onSubmit={handleSubmitPost}>
+            <div className="bg-gradient-to-b from-[#13111A]/80 to-[#0A0810]/80 border border-white/5 shadow-2xl backdrop-blur-xl rounded-3xl p-6 sm:p-10 relative overflow-hidden">
+              <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                <span className="w-1.5 h-6 bg-purple-500 rounded-full"></span>
+                Добавить ответ
+              </h3>
+              <form onSubmit={handleSubmitPost} className="relative z-10">
                 <textarea
                   value={newPostContent}
                   onChange={(e) => setNewPostContent(e.target.value)}
                   onInvalid={(e) => (e.target as HTMLTextAreaElement).setCustomValidity(t.common?.required_field || 'Required')}
                   onInput={(e) => (e.target as HTMLTextAreaElement).setCustomValidity('')}
                   placeholder="Напишите ваш ответ..."
-                  className="w-full bg-[#0F0C16] border border-white/10 rounded-lg p-4 text-white placeholder-gray-500 focus:border-purple-500/50 focus:outline-none resize-none"
+                  className="w-full bg-[#0a0810] border border-white/10 rounded-2xl p-5 text-white placeholder-gray-600 focus:border-purple-500 focus:ring-1 focus:ring-purple-500/50 outline-none resize-y transition-all text-sm sm:text-base leading-relaxed"
                   rows={6}
                   required
                 />
                 <button
                   type="submit"
                   disabled={submitting || !newPostContent.trim()}
-                  className="mt-4 px-6 py-2 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded-lg transition-colors font-medium"
+                  className="mt-6 px-8 py-3 bg-purple-600 hover:bg-purple-500 disabled:bg-purple-900/40 disabled:text-gray-500 disabled:cursor-not-allowed text-white rounded-xl transition-all font-semibold shadow-[0_4px_20px_rgba(168,85,247,0.3)] disabled:shadow-none hover:-translate-y-0.5"
                 >
                   {submitting ? 'Отправка...' : 'Отправить'}
                 </button>

@@ -4,6 +4,8 @@ export const ru = {
         forum: 'Форум',
         docs: 'Документация',
         donate: 'Донат',
+        profile: 'Профиль',
+        login: 'Войти',
         download: 'Скачать',
         downloadOS: 'Скачать для {os}',
     },
@@ -160,7 +162,8 @@ export const ru = {
             development: 'Разработка'
         },
         delete_thread: 'Удалить тред',
-        confirming_delete: 'Удаление...'
+        confirming_delete: 'Удаление...',
+        confirm_delete_post: 'Вы уверены, что хотите удалить этот комментарий?'
     },
     docs_page: {
         title: 'Документация',

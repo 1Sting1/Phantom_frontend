@@ -214,13 +214,13 @@ const Header = () => {
         />
       )}
 
-      <div className="w-full sticky top-0 z-50 px-4 sm:px-8 pt-6">
-        <div className="w-[75%] max-w-[900px] mx-auto relative bg-[#0F0C16]/90 backdrop-blur-xl rounded-full border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
+      <div className="w-full sticky top-0 z-50 px-4 sm:px-6 pt-6 flex justify-center">
+        <div className="w-full lg:w-fit max-w-[1000px] relative bg-[#0F0C16]/90 backdrop-blur-xl rounded-[2rem] border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.5)] transition-all duration-300">
 
           {/* Top glow */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-[1px] bg-gradient-to-r from-transparent via-purple-500/40 to-transparent"></div>
 
-          <header className="relative flex items-center justify-between px-5 sm:px-6 h-[68px] w-full z-10">
+          <header className="relative flex items-center justify-between lg:justify-center px-5 sm:px-6 lg:px-6 h-[68px] w-full z-10 lg:gap-8">
 
             {/* 1. LOGO */}
             <div className="flex items-center z-20">
@@ -260,12 +260,12 @@ const Header = () => {
             </div>
 
             {/* 2. NAV */}
-            <div className="hidden lg:flex flex-shrink-0 items-center justify-center z-20 ml-10">
+            <div className="hidden lg:flex flex-shrink-0 items-center justify-center z-20">
               <NavigationItems pathname={pathname} />
             </div>
 
             {/* 3. ACTIONS */}
-            <div className="flex-1 flex items-center justify-end gap-4 z-20">
+            <div className="flex items-center justify-end gap-3 sm:gap-4 z-20">
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 className="lg:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5 text-white bg-purple-500/15 border border-purple-500/40 rounded-xl backdrop-blur-sm"
@@ -329,6 +329,13 @@ const Header = () => {
               </button>
             </div>
             <nav className="flex flex-col p-6 gap-4">
+              <Link href={isAuthenticated ? '/profile' : '/login'} onClick={() => setMobileMenuOpen(false)} className="text-lg py-3 px-4 text-purple-400 font-semibold flex items-center gap-3 hover:text-purple-300 hover:bg-white/5 rounded-lg border border-purple-500/20 bg-purple-500/5">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                {isAuthenticated ? (t.header.profile || 'Profile') : (t.header.login || 'Login')}
+              </Link>
               <Link href="/install" onClick={() => setMobileMenuOpen(false)} className="text-lg py-3 px-4 text-gray-300 hover:text-white hover:bg-white/5 rounded-lg">{t.header.install}</Link>
               <Link href="/forum" onClick={() => setMobileMenuOpen(false)} className="text-lg py-3 px-4 text-gray-300 hover:text-white hover:bg-white/5 rounded-lg">{t.header.forum}</Link>
               <Link href="/docs" onClick={() => setMobileMenuOpen(false)} className="text-lg py-3 px-4 text-gray-300 hover:text-white hover:bg-white/5 rounded-lg">{t.header.docs}</Link>

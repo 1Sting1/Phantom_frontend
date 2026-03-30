@@ -6,6 +6,8 @@ export const en: Translations = {
         forum: 'Forum',
         docs: 'Documentation',
         donate: 'Donate',
+        profile: 'Profile',
+        login: 'Login',
         download: 'Download',
         downloadOS: 'Download for {os}',
     },
@@ -162,7 +164,8 @@ export const en: Translations = {
             development: 'Development'
         },
         delete_thread: 'Delete thread',
-        confirming_delete: 'Deleting...'
+        confirming_delete: 'Deleting...',
+        confirm_delete_post: 'Are you sure you want to delete this comment?'
     },
     docs_page: {
         title: 'Documentation',
