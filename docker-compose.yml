@@ -1,7 +1,7 @@
 services:
   frontend:
     build:
-      context: frontend
+      context: .
       dockerfile: Dockerfile
     environment:
       # Used only as a fallback for non-browser environments.
