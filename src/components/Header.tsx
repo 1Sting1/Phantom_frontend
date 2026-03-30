@@ -224,7 +224,7 @@ const Header = () => {
 
             {/* 1. LOGO */}
             <div className="flex items-center z-20">
-              <Link href="/" className="flex items-center gap-2.5 transition-transform hover:scale-[1.02]">
+              <Link href="/public" className="flex items-center gap-2.5 transition-transform hover:scale-[1.02]">
 
                 {/* Ghost icon — click to trigger easter egg */}
                 <div
