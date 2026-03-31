@@ -68,7 +68,7 @@ const Features = () => {
 
   useEffect(() => {
 
-    fetch(`${process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:8080/api/v1'}/public/features?lang=${language}`)
+    fetch(`${process.env.NEXT_PUBLIC_API_BASE || '/api/v1'}/public/features?lang=${language}`)
       .then(res => res.json())
       .then(data => {
         if (data.data && Array.isArray(data.data)) {

@@ -20,7 +20,7 @@ const Carousel = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:8080/api/v1'}/public/carousel`)
+    fetch(`${process.env.NEXT_PUBLIC_API_BASE || '/api/v1'}/public/carousel`)
       .then(res => res.json())
       .then(data => {
         if (data.data && Array.isArray(data.data)) {
