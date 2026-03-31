@@ -1,9 +1,8 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
-import { ru, Translations } from '@/translations/ru';
-import { en } from '@/translations/en';
-import { getApiBase } from '@/lib/apiBase';
+import { ru, Translations } from '../translations/ru';
+import { en } from '../translations/en';
 
 type Language = 'ru' | 'en';
 
@@ -72,7 +71,8 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 function getAuthApiBase(): string {
-    return getApiBase();
+    if (typeof window !== 'undefined') return window.location.origin + '/api/v1';
+    return process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:3000/api/v1';
 }
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {

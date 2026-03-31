@@ -2,8 +2,8 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { useLanguage } from '@/context/LanguageContext';
-import { OS, useOS } from '@/hooks/useOS';
+import { useLanguage } from '../context/LanguageContext';
+import { OS, useOS } from '../hooks/useOS';
 
 const DownloadCTA = () => {
     const { t } = useLanguage();

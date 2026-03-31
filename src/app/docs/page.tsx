@@ -1,9 +1,9 @@
 'use client';
 
 import React from 'react';
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import { useLanguage } from "@/context/LanguageContext";
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
+import { useLanguage } from "../../context/LanguageContext";
 
 export default function DocsPage() {
     const { t } = useLanguage();

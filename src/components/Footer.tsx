@@ -2,8 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useLanguage } from '@/context/LanguageContext';
-import { getApiBase } from '@/lib/apiBase';
+import { useLanguage } from '../context/LanguageContext';
 
 interface FooterLink {
   id: string;
@@ -20,7 +19,7 @@ const Footer = () => {
   const [langMenuOpen, setLangMenuOpen] = useState(false);
 
   useEffect(() => {
-    fetch(`${getApiBase()}/public/footer-links`)
+    fetch(`${process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:8080/api/v1'}/public/footer-links`)
       .then(res => res.json())
       .then(data => {
         if (data.data && Array.isArray(data.data)) {

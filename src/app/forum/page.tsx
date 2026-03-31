@@ -1,10 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
 import Link from 'next/link';
-import { useLanguage } from '@/context/LanguageContext';
+import { useLanguage } from '../../context/LanguageContext';
 
 interface Category {
   id: string;

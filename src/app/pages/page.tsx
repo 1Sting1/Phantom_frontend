@@ -2,9 +2,8 @@
 
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState, Suspense } from 'react';
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import { getApiBase } from '@/lib/apiBase';
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
 
 function PagesContent() {
     const searchParams = useSearchParams();
@@ -19,7 +18,7 @@ function PagesContent() {
         }
 
         // Fetch page content from API
-        fetch(`${getApiBase()}/public/pages?slug=${slug}&lang=ru`)
+        fetch(`${process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:8080/api/v1'}/public/pages?slug=${slug}&lang=ru`)
             .then(res => res.json())
             .then(data => {
                 if (data.data) {

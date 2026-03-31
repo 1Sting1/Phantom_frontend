@@ -2,8 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { useLanguage } from '@/context/LanguageContext';
-import { getApiBase } from '@/lib/apiBase';
+import { useLanguage } from '../context/LanguageContext';
 import { motion, useScroll, useTransform, useMotionValueEvent } from 'framer-motion';
 
 interface CarouselSlide {
@@ -21,7 +20,7 @@ const Carousel = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`${getApiBase()}/public/carousel`)
+    fetch(`${process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:8080/api/v1'}/public/carousel`)
       .then(res => res.json())
       .then(data => {
         if (data.data && Array.isArray(data.data)) {

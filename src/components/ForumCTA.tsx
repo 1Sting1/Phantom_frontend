@@ -3,7 +3,7 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useLanguage } from '@/context/LanguageContext';
+import { useLanguage } from '../context/LanguageContext';
 
 const ForumCTA = () => {
     const { t } = useLanguage();
