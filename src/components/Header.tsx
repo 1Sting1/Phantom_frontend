@@ -3,8 +3,8 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useLanguage } from '../context/LanguageContext';
-import { useAuth } from '../context/LanguageContext';
+import { useLanguage } from '@/context/LanguageContext';
+import { useAuth } from '@/context/LanguageContext';
 
 interface NavigationItem {
   id: string;

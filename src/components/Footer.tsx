@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useLanguage } from '../context/LanguageContext';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface FooterLink {
   id: string;
@@ -19,7 +19,7 @@ const Footer = () => {
   const [langMenuOpen, setLangMenuOpen] = useState(false);
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_BASE || '/api/v1'}/public/footer-links`)
+    fetch(`${process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:8080/api/v1'}/public/footer-links`)
       .then(res => res.json())
       .then(data => {
         if (data.data && Array.isArray(data.data)) {
@@ -59,7 +59,7 @@ const Footer = () => {
       { id: '9', title: 'linkedin', href: '#', category: 'social', order: 1 }
     ],
     contact: [
-      { id: '10', title: 'hello@phantom-messenger.ru', href: 'mailto:phantom-messenger.ru', category: 'contact', order: 0 },
+      { id: '10', title: 'hello@phantom.com', href: 'mailto:hello@phantom.com', category: 'contact', order: 0 },
       { id: '11', title: '@pnm', href: '#', category: 'contact', order: 1 }
     ]
   };

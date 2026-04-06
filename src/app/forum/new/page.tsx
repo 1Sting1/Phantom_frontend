@@ -1,11 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Header from "../../../components/Header";
-import Footer from "../../../components/Footer";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import { useRouter } from 'next/navigation';
-import { useLanguage } from '../../../context/LanguageContext';
-import { useAuth } from '../../../context/LanguageContext';
+import { useLanguage } from '@/context/LanguageContext';
+import { useAuth } from '@/context/LanguageContext';
 
 export default function NewThreadPage() {
   const { t } = useLanguage();
@@ -66,7 +66,7 @@ export default function NewThreadPage() {
 
     setLoading(true);
     try {
-      const apiBase = typeof window !== 'undefined' ? window.location.origin + '/api/v1' : process.env.NEXT_PUBLIC_API_BASE || '/api/v1';
+      const apiBase = typeof window !== 'undefined' ? window.location.origin + '/api/v1' : process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:3000/api/v1';
       const res = await fetch(`${apiBase}/forum/threads`, {
         method: 'POST',
         headers: {

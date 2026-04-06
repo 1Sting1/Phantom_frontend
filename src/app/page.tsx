@@ -1,10 +1,10 @@
-import Header from "../components/Header";
-import Hero from "../components/Hero";
-import Carousel from "../components/Carousel";
-import Features from "../components/Features";
-import ForumCTA from '../components/ForumCTA';
-import DownloadCTA from '../components/DownloadCTA';
-import Footer from '../components/Footer';
+import Header from "@/components/Header";
+import Hero from "@/components/Hero";
+import Carousel from "@/components/Carousel";
+import Features from "@/components/Features";
+import ForumCTA from '@/components/ForumCTA';
+import DownloadCTA from '@/components/DownloadCTA';
+import Footer from '@/components/Footer';
 
 export default function Home() {
     return (

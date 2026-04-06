@@ -2,10 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import Header from "../../../../components/Header";
-import Footer from "../../../../components/Footer";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import Link from 'next/link';
-import { useAuth, useLanguage } from '../../../../context/LanguageContext';
+import { useAuth, useLanguage } from '@/context/LanguageContext';
 
 interface Thread {
   id: string;
@@ -61,7 +61,65 @@ export default function ThreadPage() {
   }>({ open: false, message: '', onConfirm: () => {} });
   
   const { isAuthenticated, user, token } = useAuth();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+
+  const [translatedPosts, setTranslatedPosts] = useState<Record<string, string>>({});
+  const [isTranslating, setIsTranslating] = useState<Record<string, boolean>>({});
+
+  const handleTranslatePost = async (postId: string, content: string) => {
+    if (translatedPosts[postId]) {
+      const newMap = { ...translatedPosts };
+      delete newMap[postId];
+      setTranslatedPosts(newMap);
+      return;
+    }
+
+    setIsTranslating(prev => ({ ...prev, [postId]: true }));
+    try {
+      const res = await fetch('/api/v1/localization/translate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          text: content,
+          target_lang: language || 'ru',
+          source_lang: 'auto'
+        })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.data?.translated_text) {
+          setTranslatedPosts(prev => ({ ...prev, [postId]: data.data.translated_text }));
+        }
+      }
+    } catch (error) {
+      console.error('Translation failed', error);
+    } finally {
+      setIsTranslating(prev => ({ ...prev, [postId]: false }));
+    }
+  };
+
+  const handleTranslateOutgoing = async (text: string, setter: (val: string) => void, targetLang: string) => {
+    if (!text.trim()) return;
+    try {
+      const res = await fetch('/api/v1/localization/translate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          text,
+          target_lang: targetLang,
+          source_lang: 'auto'
+        })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.data?.translated_text) {
+          setter(data.data.translated_text);
+        }
+      }
+    } catch (error) {
+      console.error('Translation failed', error);
+    }
+  };
 
   const showConfirm = (message: string, onConfirm: () => void) => {
     setConfirmModal({ open: true, message, onConfirm });
@@ -445,6 +503,18 @@ export default function ThreadPage() {
                         </div>
                         
                         <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity duration-300">
+                          <button
+                            onClick={() => handleTranslatePost(post.id, post.content)}
+                            disabled={isTranslating[post.id]}
+                            className={`text-xs font-medium px-3 py-1.5 rounded-lg transition-all active:scale-95 ${
+                              translatedPosts[post.id] 
+                                ? 'bg-blue-500/20 text-blue-300 hover:bg-blue-500/30' 
+                                : 'text-blue-400 hover:text-blue-300 bg-blue-500/10 hover:bg-blue-500/20'
+                            }`}
+                          >
+                            {isTranslating[post.id] ? '...' : translatedPosts[post.id] ? (t.common?.original || 'Оригинал') : (t.common?.translate || 'Перевести')}
+                          </button>
+
                           {!thread.is_locked && (
                             <button
                               onClick={() => {
@@ -474,7 +544,7 @@ export default function ThreadPage() {
                       </div>
                       
                       <div className="text-gray-300 whitespace-pre-wrap text-[15px] leading-relaxed mb-3 relative z-10 selection:bg-purple-500/30">
-                        {post.content}
+                        {translatedPosts[post.id] || post.content}
                       </div>
 
                       {/* Inline Reply Form */}
@@ -490,21 +560,27 @@ export default function ThreadPage() {
                               autoFocus
                               required
                             />
-                            <div className="flex justify-end gap-3 mt-3">
-                              <button
-                                type="button"
-                                onClick={() => setReplyingTo(null)}
-                                className="px-5 py-2 text-xs font-semibold text-gray-400 hover:text-white bg-white/5 hover:bg-white/10 rounded-lg transition-colors active:scale-95"
-                              >
-                                Отмена
-                              </button>
-                              <button
-                                type="submit"
-                                disabled={submittingReply || !replyContent.trim()}
-                                className="px-5 py-2 text-xs bg-purple-600 hover:bg-purple-500 disabled:bg-purple-600/50 text-white rounded-lg transition-all font-semibold active:scale-95 shadow-[0_0_15px_rgba(168,85,247,0.3)] disabled:shadow-none"
-                              >
-                                {submittingReply ? 'Отправка...' : 'Ответить'}
-                              </button>
+                            <div className="flex justify-between items-center mt-3">
+                              <div className="flex gap-2">
+                                <button type="button" onClick={() => handleTranslateOutgoing(replyContent, setReplyContent, 'en')} className="px-2 py-1 text-[10px] sm:text-xs font-medium bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 rounded-lg border border-blue-500/20 transition-all active:scale-95 mr-1">→ EN 🇬🇧</button>
+                                <button type="button" onClick={() => handleTranslateOutgoing(replyContent, setReplyContent, 'ru')} className="px-2 py-1 text-[10px] sm:text-xs font-medium bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 rounded-lg border border-blue-500/20 transition-all active:scale-95">→ RU 🇷🇺</button>
+                              </div>
+                              <div className="flex gap-3">
+                                <button
+                                  type="button"
+                                  onClick={() => setReplyingTo(null)}
+                                  className="px-5 py-2 text-xs font-semibold text-gray-400 hover:text-white bg-white/5 hover:bg-white/10 rounded-lg transition-colors active:scale-95"
+                                >
+                                  Отмена
+                                </button>
+                                <button
+                                  type="submit"
+                                  disabled={submittingReply || !replyContent.trim()}
+                                  className="px-5 py-2 text-xs bg-purple-600 hover:bg-purple-500 disabled:bg-purple-900/40 disabled:text-gray-500 text-white rounded-lg transition-all font-semibold active:scale-95 shadow-[0_0_15px_rgba(168,85,247,0.3)] disabled:shadow-none"
+                                >
+                                  {submittingReply ? 'Отправка...' : 'Ответить'}
+                                </button>
+                              </div>
                             </div>
                           </form>
                         </div>
@@ -533,6 +609,16 @@ export default function ThreadPage() {
                 Добавить ответ
               </h3>
               <form onSubmit={handleSubmitPost} className="relative z-10">
+                <div className="flex gap-2 mb-4">
+                   <button type="button" onClick={() => handleTranslateOutgoing(newPostContent, setNewPostContent, 'en')} className="px-3 py-1.5 text-xs font-medium bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 rounded-lg border border-blue-500/20 transition-all active:scale-95 flex items-center gap-1.5">
+                     <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" /></svg>
+                     Translate to 🇬🇧
+                   </button>
+                   <button type="button" onClick={() => handleTranslateOutgoing(newPostContent, setNewPostContent, 'ru')} className="px-3 py-1.5 text-xs font-medium bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 rounded-lg border border-blue-500/20 transition-all active:scale-95 flex items-center gap-1.5">
+                     <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" /></svg>
+                     Перевести на 🇷🇺
+                   </button>
+                </div>
                 <textarea
                   value={newPostContent}
                   onChange={(e) => setNewPostContent(e.target.value)}

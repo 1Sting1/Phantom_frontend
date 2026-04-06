@@ -1,15 +1,15 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useLanguage } from '../../context/LanguageContext';
-import { useAuth } from '../../context/LanguageContext';
-import Header from '../../components/Header';
-import { GhostAvatar, GHOST_AVATARS } from '../../components/GhostAvatar';
+import { useLanguage } from '@/context/LanguageContext';
+import { useAuth } from '@/context/LanguageContext';
+import Header from '@/components/Header';
+import { GhostAvatar, GHOST_AVATARS } from '@/components/GhostAvatar';
 import { useRouter } from 'next/navigation';
 
 function getApiBase(): string {
   if (typeof window !== 'undefined') return window.location.origin + '/api/v1';
-  return process.env.NEXT_PUBLIC_API_BASE || '/api/v1';
+  return process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:3000/api/v1';
 }
 
 export default function ProfilePage() {

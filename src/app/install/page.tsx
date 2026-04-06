@@ -1,10 +1,10 @@
 'use client';
 
 import React from 'react';
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
-import DownloadCTA from "../../components/DownloadCTA";
-import { useLanguage } from "../../context/LanguageContext";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import DownloadCTA from "@/components/DownloadCTA";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function InstallPage() {
     const { t } = useLanguage();

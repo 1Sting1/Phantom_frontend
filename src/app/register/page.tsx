@@ -2,9 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useLanguage } from '../../context/LanguageContext';
-import { useAuth } from '../../context/LanguageContext';
-import Header from '../../components/Header';
+import { useLanguage } from '@/context/LanguageContext';
+import { useAuth } from '@/context/LanguageContext';
+import Header from '@/components/Header';
 import { useRouter } from 'next/navigation';
 
 export default function RegisterPage() {
@@ -82,7 +82,7 @@ export default function RegisterPage() {
     setError('');
 
     if (nickname.length < 3) {
-      setError(t.auth.shortPassword || 'Nickname is too short');
+      setError(t.auth.shortNickname || 'Nickname is too short');
       return;
     }
 
