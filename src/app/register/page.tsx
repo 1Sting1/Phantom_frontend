@@ -82,7 +82,7 @@ export default function RegisterPage() {
     setError('');
 
     if (nickname.length < 3) {
-      setError(t.auth.shortPassword || 'Nickname is too short');
+      setError(t.auth.shortNickname || 'Nickname is too short');
       return;
     }
 

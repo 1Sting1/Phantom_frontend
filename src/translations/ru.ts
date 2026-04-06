@@ -113,8 +113,9 @@ export const ru = {
         alreadyHaveAccount: 'Уже есть аккаунт?',
         createAccountLink: 'Создать аккаунт',
         loginLink: 'Войти',
-        weakPassword: 'Ой, этот пароль слишком простой! Придумайте что-то надёжнее (не 123456 или qwerty).',
+        weakPassword: 'Слишком простой пароль. Добавьте буквы, цифры или символы.',
         shortPassword: 'Пароль должен содержать минимум 8 символов.',
+        shortNickname: 'Никнейм должен содержать минимум 3 символа.',
     },
     profile: {
         title: 'Профиль',
@@ -163,7 +164,11 @@ export const ru = {
         },
         delete_thread: 'Удалить тред',
         confirming_delete: 'Удаление...',
-        confirm_delete_post: 'Вы уверены, что хотите удалить этот комментарий?'
+        confirm_delete_post: 'Вы уверены, что хотите удалить этот комментарий?',
+        search_placeholder: 'Поиск по тредам...',
+        sort_newest: 'Сначала новые',
+        sort_oldest: 'Сначала старые',
+        sort_popular: 'Популярные'
     },
     docs_page: {
         title: 'Документация',
@@ -178,7 +183,9 @@ export const ru = {
     common: {
         loading: 'Загрузка...',
         menu: 'Меню',
-        required_field: 'Заполните это поле.',
+        required_field: 'Обязательное поле',
+        original: 'Оригинал',
+        translate: 'Перевести',
     }
 };
 

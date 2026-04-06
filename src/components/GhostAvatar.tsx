@@ -1,11 +1,11 @@
 import React from 'react';
 
 export const GHOST_AVATARS = [
-  { id: 'ghost-1', src: '/ghost-v2-pink.png', name: 'Magenta Phantom' },
-  { id: 'ghost-2', src: '/ghost-v2-blue.png', name: 'Blue Phantom' },
-  { id: 'ghost-3', src: '/ghost-v2-green.png', name: 'Green Phantom' },
-  { id: 'ghost-4', src: '/ghost-v2-yellow.png', name: 'Amber Phantom' },
-  { id: 'ghost-5', src: '/ghost-v2-pink.png', hue: '240deg', name: 'Purple Phantom' },
+  { id: 'ghost-1', src: '/ghost-v2-pink.webp', name: 'Magenta Phantom' },
+  { id: 'ghost-2', src: '/ghost-v2-blue.webp', name: 'Blue Phantom' },
+  { id: 'ghost-3', src: '/ghost-v2-green.webp', name: 'Green Phantom' },
+  { id: 'ghost-4', src: '/ghost-v2-yellow.webp', name: 'Amber Phantom' },
+  { id: 'ghost-5', src: '/ghost-v2-pink.webp', hue: '240deg', name: 'Purple Phantom' },
 ];
 
 interface GhostAvatarProps {

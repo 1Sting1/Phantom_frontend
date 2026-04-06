@@ -57,19 +57,19 @@ const Carousel = () => {
         setSlides([
           {
             id: '1',
-            imageUrl: '/ghost-3d.png',
+            imageUrl: '/ghost-3d.webp',
             title: t.carousel.slide1,
             order: 0
           },
           {
             id: '2',
-            imageUrl: '/ghost-3d.png',
+            imageUrl: '/ghost-3d.webp',
             title: t.carousel.slide2,
             order: 1
           },
           {
             id: '3',
-            imageUrl: '/ghost-3d.png',
+            imageUrl: '/ghost-3d.webp',
             title: t.carousel.slide3,
             order: 2
           }
@@ -169,7 +169,7 @@ const Carousel = () => {
                                   {/* 3D Logo */}
                                   <div className="relative w-32 h-32 mb-4">
                                     <Image
-                                      src="/phantom-ghost.png"
+                                      src="/phantom-ghost.webp"
                                       alt="Phantom Logo"
                                       fill
                                       className="object-contain drop-shadow-[0_0_20px_rgba(139,92,246,0.6)]"
@@ -197,7 +197,7 @@ const Carousel = () => {
                                     {/* Small Logo */}
                                     <div className="relative w-16 h-16 mb-8">
                                       <Image
-                                        src="/phantom-ghost.png"
+                                        src="/phantom-ghost.webp"
                                         alt="Phantom Logo"
                                         fill
                                         className="object-contain drop-shadow-[0_0_15px_rgba(139,92,246,0.6)]"
@@ -232,7 +232,7 @@ const Carousel = () => {
                                   {/* Logo */}
                                   <div className="relative w-16 h-16 mb-8">
                                     <Image
-                                      src="/phantom-ghost.png"
+                                      src="/phantom-ghost.webp"
                                       alt="Phantom Logo"
                                       fill
                                       className="object-contain drop-shadow-[0_0_15px_rgba(139,92,246,0.6)]"
@@ -316,10 +316,10 @@ const ChatListItems = ({ compact = false }: { compact?: boolean }) => {
               <div className={`${compact ? 'w-8 h-8' : 'w-9 h-9'} relative`}>
                 <Image
                   src={
-                    color === 'pink' ? '/ghost-v2-pink.png' :
-                      color === 'blue' ? '/ghost-v2-blue.png' :
-                        color === 'yellow' ? '/ghost-v2-yellow.png' :
-                          '/ghost-v2-green.png'
+                    color === 'pink' ? '/ghost-v2-pink.webp' :
+                      color === 'blue' ? '/ghost-v2-blue.webp' :
+                        color === 'yellow' ? '/ghost-v2-yellow.webp' :
+                          '/ghost-v2-green.webp'
                   }
                   alt="Ghost Avatar"
                   fill

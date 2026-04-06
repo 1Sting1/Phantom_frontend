@@ -295,7 +295,7 @@ const Hero = () => {
               <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/0 via-yellow-500/0 to-yellow-500/0 group-hover:from-yellow-500/10 group-hover:via-yellow-500/5 group-hover:to-yellow-500/10 transition-all duration-500 ease-out"></div>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out"></div>
               <img
-                src="/linux-penguin.png"
+                src="/linux-penguin.webp"
                 alt="Linux"
                 className="relative z-10 w-6 h-6 shrink-0 object-contain group-hover:scale-110 group-hover:drop-shadow-[0_0_8px_rgba(234,179,8,0.6)] transition-all duration-500 ease-out group-hover:rotate-12 brightness-0 invert"
               />

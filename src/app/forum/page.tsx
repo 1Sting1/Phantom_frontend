@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Link from 'next/link';
@@ -31,15 +31,30 @@ interface Thread {
 export default function ForumPage() {
   const { t, language } = useLanguage();
   const [categories, setCategories] = useState<Category[]>([]);
-  const [threads, setThreads] = useState<Thread[]>([]);
+  const [allThreads, setAllThreads] = useState<Thread[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortOrder, setSortOrder] = useState<string>("newest");
   const [loading, setLoading] = useState(true);
   const [threadsLoading, setThreadsLoading] = useState(false);
   const [userProfiles, setUserProfiles] = useState<Record<string, { display_name: string }>>({});
+  
+  const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
+  const sortDropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (sortDropdownRef.current && !sortDropdownRef.current.contains(event.target as Node)) {
+        setSortDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   useEffect(() => {
     // Fetch user profiles for threads
-    const ids = Array.from(new Set(threads.map(t => t.user_id))).filter(id => !userProfiles[id]);
+    const ids = Array.from(new Set(allThreads.map(t => t.user_id))).filter(id => !userProfiles[id]);
     if (ids.length === 0) return;
 
     ids.forEach(id => {
@@ -52,7 +67,7 @@ export default function ForumPage() {
         })
         .catch(() => {});
     });
-  }, [threads]);
+  }, [allThreads]);
 
   useEffect(() => {
     // Load categories
@@ -77,24 +92,53 @@ export default function ForumPage() {
       .then(res => res.json())
       .then(data => {
         if (data.data && Array.isArray(data.data)) {
-          let filtered = data.data;
-          if (selectedCategory) {
-            filtered = filtered.filter((t: Thread) => t.category_id === selectedCategory);
-          }
-          // Sort: pinned first, then by date
-          filtered.sort((a: Thread, b: Thread) => {
-            if (a.is_pinned && !b.is_pinned) return -1;
-            if (!a.is_pinned && b.is_pinned) return 1;
-            return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
-          });
-          setThreads(filtered);
+          setAllThreads(data.data);
         }
         setThreadsLoading(false);
       })
       .catch(() => {
         setThreadsLoading(false);
       });
-  }, [selectedCategory]);
+  }, []); // Only fetch once initially or when refreshed
+
+  // Local filtering & sorting
+  const { filteredThreads, displayedThreads } = useMemo(() => {
+    let filtered = allThreads;
+
+    if (selectedCategory) {
+      filtered = filtered.filter((t: Thread) => t.category_id === selectedCategory);
+    }
+
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      filtered = filtered.filter((t: Thread) => 
+        t.title.toLowerCase().includes(q) || 
+        t.content.toLowerCase().includes(q)
+      );
+    }
+
+    const unpinned = filtered.filter(t => !t.is_pinned);
+    const pinned = filtered.filter(t => t.is_pinned);
+
+    const sortFn = (a: Thread, b: Thread) => {
+      if (sortOrder === "newest") {
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      } else if (sortOrder === "oldest") {
+        return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+      } else if (sortOrder === "most_viewed") {
+        return b.views_count - a.views_count;
+      }
+      return 0;
+    };
+
+    pinned.sort(sortFn);
+    unpinned.sort(sortFn);
+
+    return { 
+      filteredThreads: filtered, 
+      displayedThreads: [...pinned, ...unpinned] 
+    };
+  }, [allThreads, selectedCategory, searchQuery, sortOrder]);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -176,11 +220,11 @@ export default function ForumPage() {
             {/* Threads List */}
             <div className="lg:col-span-3">
               <div className="bg-gradient-to-b from-[#13111A]/80 to-[#0A0810]/80 border border-white/5 shadow-2xl backdrop-blur-xl rounded-3xl p-6 sm:p-8">
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                   <h2 className="text-2xl font-bold text-white flex items-center gap-3">
                     {t.forum_page.threads}
                     <span className="text-xs font-semibold px-2.5 py-1 bg-white/5 text-gray-400 rounded-full border border-white/10">
-                      {threads.length}
+                      {displayedThreads.length}
                     </span>
                   </h2>
                   <Link
@@ -191,17 +235,72 @@ export default function ForumPage() {
                   </Link>
                 </div>
 
+                {/* Search and Filters Bar */}
+                <div className="flex flex-col md:flex-row gap-4 mb-8 bg-[#181622]/50 p-4 rounded-2xl border border-white/5">
+                  <div className="relative flex-1">
+                    <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                    <input 
+                      type="text"
+                      placeholder={t.forum_page.search_placeholder || "Поиск по тредам..."}
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-12 pr-4 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/50 transition-all font-medium"
+                    />
+                  </div>
+                  <div className="relative" ref={sortDropdownRef}>
+                    <button 
+                      onClick={() => setSortDropdownOpen(!sortDropdownOpen)}
+                      className="w-full md:w-auto bg-black/20 border border-white/10 hover:bg-white/5 rounded-xl py-3 pl-5 pr-4 text-white focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/50 transition-all font-medium flex items-center justify-between gap-3 min-w-[200px]"
+                    >
+                      {sortOrder === 'newest' ? (t.forum_page.sort_newest || "Сначала новые") : 
+                       sortOrder === 'oldest' ? (t.forum_page.sort_oldest || "Сначала старые") : 
+                       (t.forum_page.sort_popular || "Популярные")}
+                      <svg className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${sortDropdownOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+                    
+                    {sortDropdownOpen && (
+                      <div className="absolute top-full right-0 mt-2 w-full min-w-[200px] bg-gradient-to-b from-[#13111A] to-[#0A0810]/95 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-[0_10px_40px_rgba(168,85,247,0.15)] overflow-hidden z-50 animate-in fade-in zoom-in-95 slide-in-from-top-2 duration-200">
+                        <div className="absolute inset-0 bg-gradient-to-b from-purple-500/5 to-transparent pointer-events-none"></div>
+                        {[
+                          { value: 'newest', label: t.forum_page.sort_newest || "Сначала новые" },
+                          { value: 'oldest', label: t.forum_page.sort_oldest || "Сначала старые" },
+                          { value: 'most_viewed', label: t.forum_page.sort_popular || "Популярные" }
+                        ].map(option => (
+                           <button
+                             key={option.value}
+                             onClick={() => {
+                               setSortOrder(option.value);
+                               setSortDropdownOpen(false);
+                             }}
+                             className={`w-full text-left px-5 py-3 text-sm font-medium transition-all relative z-10 border-b border-white/5 last:border-0 ${
+                               sortOrder === option.value 
+                               ? 'text-purple-400 bg-purple-500/10' 
+                               : 'text-gray-400 hover:text-white hover:bg-white/5'
+                             }`}
+                           >
+                             {option.label}
+                           </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
                 {threadsLoading ? (
                   <div className="text-center py-12">
                     <p className="text-gray-400">{t.forum_page.loading_threads}</p>
                   </div>
-                ) : threads.length === 0 ? (
+                ) : displayedThreads.length === 0 ? (
                   <div className="text-center py-12">
                     <p className="text-gray-400">{t.forum_page.no_threads}</p>
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    {threads.map((thread) => {
+                    {displayedThreads.map((thread) => {
                       const username = userProfiles[thread.user_id]?.display_name || thread.user_id;
                       return (
                       <Link

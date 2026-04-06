@@ -115,8 +115,9 @@ export const en: Translations = {
         alreadyHaveAccount: 'Already have an account?',
         createAccountLink: 'Create account',
         loginLink: 'Login',
-        weakPassword: 'Oops, this password is too simple! Please choose a more secure one (not 123456 or qwerty).',
+        weakPassword: 'Password is too simple. Add letters, numbers or symbols.',
         shortPassword: 'Password must be at least 8 characters long.',
+        shortNickname: 'Nickname must contain at least 3 characters.',
     },
     profile: {
         title: 'Profile',
@@ -165,7 +166,11 @@ export const en: Translations = {
         },
         delete_thread: 'Delete thread',
         confirming_delete: 'Deleting...',
-        confirm_delete_post: 'Are you sure you want to delete this comment?'
+        confirm_delete_post: 'Are you sure you want to delete this comment?',
+        search_placeholder: 'Search threads...',
+        sort_newest: 'Newest first',
+        sort_oldest: 'Oldest first',
+        sort_popular: 'Most viewed'
     },
     docs_page: {
         title: 'Documentation',
@@ -181,5 +186,7 @@ export const en: Translations = {
         loading: 'Loading...',
         menu: 'Menu',
         required_field: 'Please fill out this field.',
+        original: 'Original',
+        translate: 'Translate',
     }
 };

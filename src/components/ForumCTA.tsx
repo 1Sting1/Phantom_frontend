@@ -26,7 +26,7 @@ const ForumCTA = () => {
                         <div className="flex items-center gap-2 mb-6 opacity-80">
                             <div className="w-5 h-5 relative">
                                 <Image
-                                    src="/phantom-ghost.png"
+                                    src="/phantom-ghost.webp"
                                     alt="icon"
                                     fill
                                     className="object-contain opacity-80"
@@ -49,7 +49,7 @@ const ForumCTA = () => {
                     {/* Large Ghost Image - Right Side */}
                     <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[480px] h-[480px] pointer-events-none hidden sm:block">
                         <Image
-                            src="/ghost-v3-pink.png"
+                            src="/ghost-v3-pink.webp"
                             alt="Forum Ghost"
                             fill
                             quality={100}
