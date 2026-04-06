@@ -293,12 +293,8 @@ export default function ThreadPage() {
         }
       });
       if (response.ok) {
-        // Soft reload the posts list
-        const postsResponse = await fetch(`/api/v1/forum/threads/${threadId}/posts`);
-        const postsData = await postsResponse.json();
-        if (postsData.data && Array.isArray(postsData.data)) {
-          setPosts(postsData.data);
-        }
+        // Instantly remove deleted post from local state (no re-fetch needed)
+        setPosts(prev => prev.filter(p => p.id !== postId));
       } else {
         alert('Failed to delete comment');
       }
