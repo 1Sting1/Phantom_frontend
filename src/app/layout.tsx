@@ -9,7 +9,9 @@ export const metadata: Metadata = {
   title: "Phantom",
   description: "Phantom confidential messenger",
   icons: {
-    icon: '/phantom-ghost.webp',
+    icon: [
+      { url: '/ghost-v2-pink.webp', type: 'image/webp' },
+    ],
   },
 };
 

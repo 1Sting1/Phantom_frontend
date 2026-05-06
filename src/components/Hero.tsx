@@ -41,6 +41,27 @@ const CARD_PARTICLES = [
   { left: '71%', delay: '6.7s', duration: '9s'  },
 ];
 
+const GHOST_SPARKLES = [...Array(8)].map((_, i) => {
+  const angle = (i * 360) / 8;
+  const radius = 180;
+  return {
+    x: (Math.cos((angle * Math.PI) / 180) * radius).toFixed(2),
+    y: (Math.sin((angle * Math.PI) / 180) * radius).toFixed(2),
+    delay: `${(i * 0.3).toFixed(1)}s`
+  };
+});
+
+const GHOST_PARTICLES = [...Array(6)].map((_, i) => {
+  const angle = (i * 360) / 6;
+  const radius = 220;
+  return {
+    x: (Math.cos((angle * Math.PI) / 180) * radius).toFixed(2),
+    y: (Math.sin((angle * Math.PI) / 180) * radius).toFixed(2),
+    delay: `${(i * 0.5).toFixed(1)}s`
+  };
+});
+
+
 const Hero = () => {
   const { t } = useLanguage();
   const os = useOS();
@@ -362,41 +383,29 @@ const Hero = () => {
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[340px] h-[340px] border border-pink-500/5 rounded-full transition-all duration-1000 group-hover:animate-smooth-rotate" style={{ animationDuration: '30s' }}></div>
 
             {/* Sparkles Around Ghost with Enhanced Animation - Animate on Hover */}
-            {[...Array(8)].map((_, i) => {
-              const angle = (i * 360) / 8;
-              const radius = 180;
-              const x = Math.cos((angle * Math.PI) / 180) * radius;
-              const y = Math.sin((angle * Math.PI) / 180) * radius;
-              return (
-                <div
-                  key={`ghost-sparkle-${i}`}
-                  className="absolute top-1/2 left-1/2 w-2 h-2 bg-purple-400 rounded-full opacity-0 group-hover:opacity-100 group-hover:animate-sparkle transition-all duration-500"
-                  style={{
-                    transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`,
-                    animationDelay: `${i * 0.3}s`,
-                  }}
-                />
-              );
-            })}
+            {GHOST_SPARKLES.map((p, i) => (
+              <div
+                key={`ghost-sparkle-${i}`}
+                className="absolute top-1/2 left-1/2 w-2 h-2 bg-purple-400 rounded-full opacity-0 group-hover:opacity-100 group-hover:animate-sparkle transition-all duration-500"
+                style={{
+                  transform: `translate(calc(-50% + ${p.x}px), calc(-50% + ${p.y}px))`,
+                  animationDelay: p.delay,
+                }}
+              />
+            ))}
 
             {/* Additional Floating Particles - Animate on Hover */}
-            {[...Array(6)].map((_, i) => {
-              const angle = (i * 360) / 6;
-              const radius = 220;
-              const x = Math.cos((angle * Math.PI) / 180) * radius;
-              const y = Math.sin((angle * Math.PI) / 180) * radius;
-              return (
-                <div
-                  key={`ghost-particle-${i}`}
-                  className="absolute top-1/2 left-1/2 w-1 h-1 bg-cyan-400/50 rounded-full opacity-0 group-hover:opacity-100 group-hover:animate-sparkle transition-all duration-700"
-                  style={{
-                    transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`,
-                    animationDelay: `${i * 0.5}s`,
-                    animationDuration: '3s',
-                  }}
-                />
-              );
-            })}
+            {GHOST_PARTICLES.map((p, i) => (
+              <div
+                key={`ghost-particle-${i}`}
+                className="absolute top-1/2 left-1/2 w-1 h-1 bg-cyan-400/50 rounded-full opacity-0 group-hover:opacity-100 group-hover:animate-sparkle transition-all duration-700"
+                style={{
+                  transform: `translate(calc(-50% + ${p.x}px), calc(-50% + ${p.y}px))`,
+                  animationDelay: p.delay,
+                  animationDuration: '3s',
+                }}
+              />
+            ))}
 
             {/* Orbiting Security Icons Around Ghost - Animate on Hover */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 group-hover:animate-orbit transition-opacity duration-500" style={{ animationDuration: '20s' }}>
