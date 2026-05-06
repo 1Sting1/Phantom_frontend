@@ -8,6 +8,9 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Phantom",
   description: "Phantom confidential messenger",
+  icons: {
+    icon: '/phantom-ghost.webp',
+  },
 };
 
 export default function RootLayout({

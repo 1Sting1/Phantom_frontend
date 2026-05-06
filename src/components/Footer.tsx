@@ -59,7 +59,7 @@ const Footer = () => {
       { id: '9', title: 'linkedin', href: '#', category: 'social', order: 1 }
     ],
     contact: [
-      { id: '10', title: 'hello@phantom.com', href: 'mailto:hello@phantom.com', category: 'contact', order: 0 },
+      { id: '10', title: 'hello@phantom-messenger.ru', href: 'mailto:hello@phantom-messenger.ru', category: 'contact', order: 0 },
       { id: '11', title: '@pnm', href: '#', category: 'contact', order: 1 }
     ]
   };
